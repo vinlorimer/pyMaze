@@ -48,6 +48,8 @@ class Maze():
         self.rows = rows
         self.columns = columns
         self.grid = self.createGrid()
+        self.startCell = self.grid[0][0]
+        self.endCell = self.grid[-1][-1]
 
     def createGrid(self):
         """
@@ -140,10 +142,8 @@ class Maze():
         ([-1][-1] which is last cell in grid) to be the end and removes south wall.
 
         """
-        startCell = self.grid[0][0]
-        startCell.NWall = False
-        finishCell = self.grid[-1][-1]
-        finishCell.SWall = False
+        self.startCell.NWall = False
+        self.endCell.SWall = False
     
     def getCells(self):
         """
