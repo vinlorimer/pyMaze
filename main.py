@@ -9,4 +9,4 @@ maze = Maze(100,100)
 maze.openMaze()
 visualiseMaze(maze)
 
-# comment
+# commentttt
