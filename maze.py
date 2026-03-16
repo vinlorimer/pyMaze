@@ -63,8 +63,8 @@ class Maze():
 
         for row in range(self.rows):
             tempRowList = []
-            for column in range(self.columns):
-                cell = Cell(row, column)
+            for col in range(self.columns):
+                cell = Cell(row, col)
                 tempRowList.append(cell)
             grid.append(tempRowList)
 
@@ -80,18 +80,16 @@ class Maze():
         the list neighbours, once all four potential neighbours have been checked return the list of neighbours.
        
          """
-        cellRow = cell.row
-        cellColumn = cell.column
         neighbours = []
 
-        if cellRow-1 >= 0:
-            neighbours.append(self.grid[cellRow-1][cellColumn])
-        if cellRow+1 <= self.rows-1:
-            neighbours.append(self.grid[cellRow+1][cellColumn])
-        if cellColumn-1 >= 0:
-            neighbours.append(self.grid[cellRow][cellColumn-1])
-        if cellColumn+1 <= self.columns-1:
-            neighbours.append(self.grid[cellRow][cellColumn+1])
+        if cell.row-1 >= 0:
+            neighbours.append(self.grid[cell.row-1][cell.column])
+        if cell.row+1 <= self.rows-1:
+            neighbours.append(self.grid[cell.row+1][cell.column])
+        if cell.column-1 >= 0:
+            neighbours.append(self.grid[cell.row][cell.column-1])
+        if cell.column+1 <= self.columns-1:
+            neighbours.append(self.grid[cell.row][cell.column+1])
 
         return neighbours
 
@@ -113,7 +111,7 @@ class Maze():
 
         return unvisitedNeighbours
     
-    def removeWall(self, currentCell: Cell, otherCell: Cell):
+    def removeWall(self, cell: Cell, otherCell: Cell):
         """
         
         Takes two cells as parameters, then gets the row & column position of each of them and stores them in variables. Then just 
@@ -121,22 +119,18 @@ class Maze():
         finds it then it removes the two walls between them.
 
         """
-        currentCellRow = currentCell.row
-        currentCellCol = currentCell.column
-        otherCellRow = otherCell.row
-        otherCellCol = otherCell.column
 
-        if (currentCellRow < otherCellRow):
-            currentCell.SWall = False
+        if (cell.row < otherCell.row):
+            cell.SWall = False
             otherCell.NWall = False
-        elif (currentCellRow > otherCellRow):
-            currentCell.NWall = False
+        elif (cell.row > otherCell.row):
+            cell.NWall = False
             otherCell.SWall = False
-        elif (currentCellCol < otherCellCol):
-            currentCell.EWall = False
+        elif (cell.column < otherCell.column):
+            cell.EWall = False
             otherCell.WWall = False
-        elif (currentCellCol > otherCellCol):
-            currentCell.WWall = False
+        elif (cell.column > otherCell.column):
+            cell.WWall = False
             otherCell.EWall = False
 
     def openMaze(self):
@@ -163,14 +157,23 @@ class Maze():
                 cells.append(cell)
 
         return cells
-    
-    def getValidCells(self):
+        
+
+    def getReachableCells(self, cell: Cell):
         """
         
         TO DO
         
         """
-        validCells = []
+        reachableCells = []
 
-
-        return 
+        if cell.row-1 >= 0 and cell.NWall == False:
+            reachableCells.append(self.grid[cell.row-1][cell.column])
+        if cell.row+1 <= self.rows-1 and cell.SWall == False:
+            reachableCells.append(self.grid[cell.row+1][cell.column])
+        if cell.column-1 >= 0 and cell.WWall == False:
+            reachableCells.append(self.grid[cell.row][cell.column-1])
+        if cell.column+1 <= self.columns-1 and cell.EWall == False:
+            reachableCells.append(self.grid[cell.row][cell.column+1])
+            
+        return reachableCells
