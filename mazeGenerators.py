@@ -3,32 +3,24 @@ import random as rnd
 
 def DFSGenerator(maze: Maze):
     """
+    A function to generate a maze using a depth first search algorithm.
+    To do this, it first sets the current cell to the starting cell and marks it as visited, it then calculates how many cells in
+    total there are in the maze, starts counting how many cells have been visited and creates an empty stack.
 
-    Takes maze as a parameter, initiates 5 initial variables, the current cell which is always top left [0][0], sets that cell to 
-    being visited, then calculates how many cells there are in the maze, keeps count of how many cells have been visited and finally
-    an empty stack.
+    Then, while there are unvisited cells, it gets all unvisited neighbours of the current cell, if there are unvisited neighbours
+    then choose a random neighbour, add the current cell to the stack remove the walls between the current cell and random neighbour
+    then make the random neighbour the new current cell and set it to visited, add one to the visited counter. If there are no
+    unvisited neighbours then backtrack to a previous cell until there are unvisited neighbours.
 
-    While loop continues until the number of visited cells is less than the total cells (until all cells have been visited).
-    Logic is as follows:
-    -> Get unvisited neighbours of the current cell
-    -> If they exist, then do the following:
-    ----> Pick a random neighbour from the list of unvisited neighbours using the random library picking a random int between 0 
-          and the length of the unvisitedneighbours (-1 to account for indexing beginning at 0)
-          Push the current cell onto the stack
-          Remove the walls between the current cell & the random neighbouring cell.
-          Set the current cell to the random neighbour, and set the new current cell to being visited and add one to the visited
-          counter.
-    -> Else (if no other unvisited neighbours exist)
-    ----> Store the latest cell in the stack, then pop it from the stack, set the popped cell to the current cell so that the 
-          algorithm can backtrack until all cells have been visited.
-    
-    Finally, return the maze in its new form.
+    Parameters
+    ---
+    maze: Maze | Takes a maze to manipulate
 
-
-    REDO
-    
+    Returns
+    ---
+    maze | Returns the post generated maze
     """
-    currentCell = maze.grid[0][0]
+    currentCell = maze.startCell
     currentCell.visited = True
     totalCells = maze.rows * maze.columns
     visitedCounter = 1
@@ -49,20 +41,57 @@ def DFSGenerator(maze: Maze):
 
     return maze
 
+class DFSGeneratorAnimated():
+    """
+    testing 
+    """
+    def __init__(self, maze: Maze):
+        self.currentCell = maze.startCell
+        self.totalCells = maze.rows * maze.columns
+        self.visitedCount = 0
+        self.stack = []
+        
+    def step(self, maze: Maze):
+        unvisitedNeighbours = maze.getUnvisited(self.currentCell)
+        if (len(unvisitedNeighbours) > 0 ):                
+            randomNeighbour = unvisitedNeighbours[rnd.randint(0, len(unvisitedNeighbours)-1)]
+            self.stack.append(self.currentCell)
+            maze.removeWall(self.currentCell, randomNeighbour)
+            currentCell = randomNeighbour
+            currentCell.visited = True
+            visitedCounter += 1
+        else:
+            previousCell = self.stack.pop()
+            self.currentCell = previousCell
+
+
 def primsGenerator(maze: Maze):
     """
+    A function to generate a maze using Prims Algorithm. 
+    To do this, the function first chooses a random cell as the starting cell and setting it to having been visited. Then get all 
+    unvisited cells around the starting cell and add them to be possible candidates to move to. While there are still candidates,
+    choose a random cell from the candidates to be the current cell and remove it from being a candidate, then get all of the
+    neighbours around that current cell. Create a list of all the neighbours around the current cell that HAVE been visited
+    then choose a random visited neighbour and remove the walls between the current cell and that neighbour and mark the 
+    current cell as visited. Get all the unvisited neighbours of the current cell iterate through them, and if that unvisited
+    neighbour isn't already a candidate then add it to the list of candidate cells.
 
-    to do
-     
+    Parameters
+    ---
+    maze: Maze | Takes a maze to manipulate
+
+    Returns
+    ---
+    maze | Returns the post generated maze
     """
     startCell = maze.grid[rnd.randint(0, maze.rows-1)][rnd.randint(0, maze.columns-1)]
     startCell.visited = True
-    frontier = maze.getUnvisited(startCell)
+    candidateCells = maze.getUnvisited(startCell)
 
-    while len(frontier) > 0:
+    while len(candidateCells) > 0:
 
-        currentCell = frontier[rnd.randint(0, len(frontier)-1)]
-        frontier.remove(currentCell)
+        currentCell = candidateCells[rnd.randint(0, len(candidateCells)-1)]
+        candidateCells.remove(currentCell)
         allNeighbours = maze.getNeighbours(currentCell)
         visitedNeighbours = []
 
@@ -76,19 +105,15 @@ def primsGenerator(maze: Maze):
         unvisitedNeighbours = maze.getUnvisited(currentCell)
         
         for neighbour in unvisitedNeighbours:
-            if neighbour in frontier:
-                pass
-            else:
-                frontier.append(neighbour)
-    
+            if neighbour not in candidateCells:
+                candidateCells.append(neighbour)
+                  
     return maze
-
 
 def wilsonsGenerator(maze: Maze):
     """
-    
-    ts is long brah
-
+    A function to generate a maze using Wilson's Algorithm.
+    To do this 
     """
     allCells = maze.getCells()
     randomCell = allCells[rnd.randint(0, len(allCells)-1)]
