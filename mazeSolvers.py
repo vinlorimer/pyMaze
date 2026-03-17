@@ -36,7 +36,7 @@ def humanSolver(maze: Maze, rule = "L"):
     directions = []
 
     while currentCell != endCell:
-        if rule == "L" or "left":
+        if rule == "L" or rule == "left":
             if facing == "N":
                 directions = ["W", "N", "E", "S"]
             elif facing == "S":
@@ -46,7 +46,7 @@ def humanSolver(maze: Maze, rule = "L"):
             elif facing == "W":
                 directions = ["S", "W", "N", "E"]
 
-        elif rule == "R" or "right":
+        elif rule == "R" or rule == "right":
             if facing == "N":
                 directions = ["E", "N", "W", "S"]
             elif facing == "S":
@@ -115,7 +115,7 @@ def aStarSolver(maze: Maze):
                 path.append(currentCell)
 
             path.reverse()
-            return path
+            break
 
         openSet.remove(currentCell)
         closedSet.add(currentCell)
@@ -135,4 +135,4 @@ def aStarSolver(maze: Maze):
                 if cell not in openSet:
                     openSet.append(cell)
 
-    return []
+    return path
