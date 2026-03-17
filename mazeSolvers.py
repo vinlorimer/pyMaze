@@ -1,5 +1,99 @@
-### dumb mouse algorithm
+from maze import Maze
+import random as rnd
 
-### human left/right hand rule
+def mouseSolver(maze: Maze, maxSteps: int = 10000):
+    """
 
-### a * algorithm
+    TO DO
+    
+    """
+
+    currentCell = maze.startCell
+    endCell = maze.endCell
+    path = [currentCell]
+    steps = 0
+    
+
+    while currentCell != endCell and steps < maxSteps:
+        neighbours = maze.getReachableCells(currentCell)
+        randomNeighbour = neighbours[rnd.randint(0, len(neighbours)-1)]
+        currentCell = randomNeighbour
+        path.append(currentCell)
+        steps+=1
+
+    return path
+
+def humanSolver(maze: Maze, rule = "L"):
+    """
+
+    TO DO
+
+    """
+    currentCell = maze.startCell
+    endCell = maze.endCell
+    path = [currentCell]
+    facing = "S"
+    directions = []
+
+    while currentCell != endCell:
+        if rule == "L" or "left":
+            if facing == "N":
+                directions = ["W", "N", "E", "S"]
+            elif facing == "S":
+                directions = ["E", "S", "W", "N"]
+            elif facing == "E":
+                directions = ["N", "E", "S", "W"]
+            elif facing == "W":
+                directions = ["S", "W", "N", "E"]
+
+        elif rule == "R" or "right":
+            if facing == "N":
+                directions = ["E", "N", "W", "S"]
+            elif facing == "S":
+                directions = ["W", "S", "E", "N"]
+            elif facing == "E":
+                directions = ["S", "E", "N", "W"]
+            elif facing == "W":
+                directions = ["N", "W", "S", "E"]
+
+        for direction in directions:
+            if direction == "N":
+                if currentCell.row > 0 and currentCell.NWall == False:
+                    currentCell = maze.grid[currentCell.row - 1][currentCell.column]
+                    facing = "N"
+                    path.append(currentCell)
+                    break
+
+            elif direction == "S":
+                if currentCell.row < maze.rows - 1 and currentCell.SWall == False:
+                    currentCell = maze.grid[currentCell.row + 1][currentCell.column]
+                    facing = "S"
+                    path.append(currentCell)
+                    break
+
+            elif direction == "E":
+                if currentCell.column < maze.columns - 1 and currentCell.EWall == False:
+                    currentCell = maze.grid[currentCell.row][currentCell.column + 1]
+                    facing = "E"
+                    path.append(currentCell)
+                    break
+
+            elif direction == "W":
+                if currentCell.column > 0 and currentCell.WWall == False:
+                    currentCell = maze.grid[currentCell.row][currentCell.column - 1]
+                    facing = "W"
+                    path.append(currentCell)
+                    break
+
+    return path
+
+def aStarSolver(maze: Maze):
+    """
+
+    TO DO
+
+    """
+    
+    path = []
+    
+    return path
