@@ -93,7 +93,46 @@ def aStarSolver(maze: Maze):
     TO DO
 
     """
-    
-    path = []
-    
-    return path
+    startCell = maze.startCell
+    endCell = maze.endCell
+
+    openSet = [startCell]
+    closedSet = set()
+    gScore = {}
+    fScore = {}
+    cameFrom = {}
+
+    gScore[startCell] = 0
+    fScore[startCell] = abs(endCell.row - startCell.row) + abs(endCell.column - startCell.column)
+
+    while len(openSet) > 0:
+        currentCell = min(openSet, key=lambda cell: fScore.get(cell, float("inf")))
+
+        if currentCell == endCell:
+            path = [currentCell]
+            while currentCell in cameFrom:
+                currentCell = cameFrom[currentCell]
+                path.append(currentCell)
+
+            path.reverse()
+            return path
+
+        openSet.remove(currentCell)
+        closedSet.add(currentCell)
+
+        reachableCells = maze.getReachableCells(currentCell)
+        for cell in reachableCells:
+            if cell in closedSet:
+                continue
+
+            tentativeG = gScore[currentCell] + 1
+
+            if cell not in gScore or tentativeG < gScore[cell]:
+                cameFrom[cell] = currentCell
+                gScore[cell] = tentativeG
+                fScore[cell] = tentativeG + abs(endCell.row - cell.row) + abs(endCell.column - cell.column)
+
+                if cell not in openSet:
+                    openSet.append(cell)
+
+    return []
