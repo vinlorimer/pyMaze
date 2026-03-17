@@ -41,42 +41,6 @@ def DFSGenerator(maze: Maze):
 
     return maze
 
-class DFSGeneratorAnimated():
-    """
-    testing 
-    """
-    def __init__(self, maze: Maze):
-        """
-
-        """
-        self.maze = maze
-        self.currentCell = maze.startCell
-        self.totalCells = maze.rows * maze.columns
-        self.currentCell.visited = True
-        self.visitedCount = 1
-        self.stack = []
-        
-    def step(self):
-        """
-
-        """
-        if self.visitedCount >= self.totalCells:
-            return False
-        
-        unvisitedNeighbours = self.maze.getUnvisited(self.currentCell)
-
-        if len(unvisitedNeighbours) > 0:                
-            randomNeighbour = unvisitedNeighbours[rnd.randint(0, len(unvisitedNeighbours)-1)]
-            self.stack.append(self.currentCell)
-            self.maze.removeWall(self.currentCell, randomNeighbour)
-            self.currentCell = randomNeighbour
-            self.currentCell.visited = True
-            self.visitedCount += 1
-        elif len(self.stack) > 0:
-            self.currentCell = self.stack.pop()
-        
-        return True
-
 def primsGenerator(maze: Maze):
     """
     A function to generate a maze using Prims Algorithm. 
