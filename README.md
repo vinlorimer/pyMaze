@@ -12,7 +12,7 @@ maze = Maze(rows=20, columns=20)
 
 From this a `Maze` object is created containing a 20x20 grid of Cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
-Now we geenrate the maze using the DFS-based generator:
+Now we generate the maze using the DFS-based generator:
 ```python
 from mazeGenerators import DFSGenerator
 maze = DFSGenerator(maze)
