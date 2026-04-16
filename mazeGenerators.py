@@ -1,7 +1,7 @@
 from maze import Maze
 import random as rnd
 
-def DFSGenerator(maze: Maze):
+def DFSGenerator(maze: Maze, seed = None):
     """
     A function to generate a maze using a depth first search algorithm.
     To do this, it first sets the current cell to the starting cell and marks it as visited, it then calculates how many cells in
@@ -20,6 +20,7 @@ def DFSGenerator(maze: Maze):
     ---
     maze | Returns the post generated maze
     """
+    rng = rnd.Random(seed)
     currentCell = maze.startCell
     currentCell.visited = True
     totalCells = maze.rows * maze.columns
@@ -29,7 +30,7 @@ def DFSGenerator(maze: Maze):
     while visitedCounter < totalCells:
         unvisitedNeighbours = maze.getUnvisited(currentCell)
         if (len(unvisitedNeighbours) > 0 ):                
-            randomNeighbour = unvisitedNeighbours[rnd.randint(0, len(unvisitedNeighbours)-1)]
+            randomNeighbour = unvisitedNeighbours[rng.randint(0, len(unvisitedNeighbours)-1)]
             stack.append(currentCell)
             maze.removeWall(currentCell, randomNeighbour)
             currentCell = randomNeighbour
@@ -41,7 +42,7 @@ def DFSGenerator(maze: Maze):
 
     return maze
 
-def primsGenerator(maze: Maze):
+def primsGenerator(maze: Maze, seed = None):
     """
     A function to generate a maze using Prims Algorithm. 
     To do this, the function first chooses a random cell as the starting cell and setting it to having been visited. Then get all 
@@ -60,13 +61,14 @@ def primsGenerator(maze: Maze):
     ---
     maze | Returns the post generated maze
     """
-    startCell = maze.grid[rnd.randint(0, maze.rows-1)][rnd.randint(0, maze.columns-1)]
+    rng = rnd.Random(seed)
+    startCell = maze.grid[rng.randint(0, maze.rows-1)][rng.randint(0, maze.columns-1)]
     startCell.visited = True
     candidateCells = maze.getUnvisited(startCell)
 
     while len(candidateCells) > 0:
 
-        currentCell = candidateCells[rnd.randint(0, len(candidateCells)-1)]
+        currentCell = candidateCells[rng.randint(0, len(candidateCells)-1)]
         candidateCells.remove(currentCell)
         allNeighbours = maze.getNeighbours(currentCell)
         visitedNeighbours = []
@@ -75,7 +77,7 @@ def primsGenerator(maze: Maze):
             if neighbour.visited == True:
                 visitedNeighbours.append(neighbour)
 
-        randomVisitedNeighbour = visitedNeighbours[rnd.randint(0, len(visitedNeighbours)-1)]
+        randomVisitedNeighbour = visitedNeighbours[rng.randint(0, len(visitedNeighbours)-1)]
         maze.removeWall(currentCell, randomVisitedNeighbour)
         currentCell.visited = True
         unvisitedNeighbours = maze.getUnvisited(currentCell)
@@ -86,7 +88,7 @@ def primsGenerator(maze: Maze):
                   
     return maze
 
-def wilsonsGenerator(maze: Maze):
+def wilsonsGenerator(maze: Maze, seed = None):
     """
     A function to generate a maze using Wilson's Algorithm.
     To do this, we create a list of all the cells, then choose one at "random" removing the chosen one from our list and marking
@@ -102,18 +104,19 @@ def wilsonsGenerator(maze: Maze):
     ---
     maze | Returns the post generated maze
     """
+    rng = rnd.Random(seed)
     allCells = maze.getCells()
-    randomCell = allCells[rnd.randint(0, len(allCells)-1)]
+    randomCell = allCells[rng.randint(0, len(allCells)-1)]
     randomCell.visited = True
     allCells.remove(randomCell)
 
     while len(allCells) > 0:
-        currentCell = allCells[rnd.randint(0, len(allCells)-1)]
+        currentCell = allCells[rng.randint(0, len(allCells)-1)]
         walkpath = [currentCell]
 
         while currentCell.visited == False:
             currentCellNeighbours = maze.getNeighbours(currentCell)
-            randomNeighbour = currentCellNeighbours[rnd.randint(0, len(currentCellNeighbours)-1)]
+            randomNeighbour = currentCellNeighbours[rng.randint(0, len(currentCellNeighbours)-1)]
             
             if randomNeighbour in walkpath:
                 loopStart = walkpath.index(randomNeighbour)
