@@ -14,8 +14,8 @@ From this a `Maze` object is created containing a 20x20 grid of Cell objects. Th
 
 Now we generate the maze using the DFS-based generator:
 ```python
-from mazeGenerators import DFSGenerator
-maze = DFSGenerator(maze)
+>>> from mazeGenerators import DFSGenerator
+>>> maze = DFSGenerator(maze)
 ```
 
 The generator will mopdify the maze by removing walls between cells, now the maze becoems fully connected (there now exists a route through the maze), then the function returns the generated maze. 
