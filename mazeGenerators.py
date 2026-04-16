@@ -92,7 +92,7 @@ def wilsonsGenerator(maze: Maze):
     To do this, we create a list of all the cells, then choose one at "random" removing the chosen one from our list and marking
     it as visited. While there are cells in the list pick a random cell from the list and add it to the walkpath of the generator.
     While the current cell is unvisited get all of its neighbours and pick a random neighbour, then if that neighbour has already 
-    been added to the walkpath, then 
+    been added to the walkpath
 
     Paramters
     ---
