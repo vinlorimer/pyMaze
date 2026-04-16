@@ -25,9 +25,6 @@ class Cell():
         self.SWall = True
         self.WWall = True
 
-    def __eq__(self, value):
-        pass
-
 class Maze():
     """
     A class for the maze, with useful functions to aid in both generation & solving.
