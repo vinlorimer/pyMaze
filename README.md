@@ -1,7 +1,7 @@
 # PyMaze
 A function to generate, solve and visualise Mazes. 
 ## Tutorial
-In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using A* solver, and then visualise the maze using Pygame. 
+In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using maze solver, and then visualise the maze using Pygame. 
 
 We start by importing Maze from maze and creating a 20x20 maze. 
 
@@ -10,7 +10,7 @@ We start by importing Maze from maze and creating a 20x20 maze.
 >>> maze = Maze(rows=20, columns=20)
 ``` 
 
-From this a `Maze` object is created containing a 20x20 grid of Cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
+From this a `Maze` object is created containing a 20x20 grid of cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
 Now we generate the maze using the DFS-based generator:
 ```python
@@ -18,9 +18,9 @@ Now we generate the maze using the DFS-based generator:
 >>> maze = DFSGenerator(maze)
 ```
 
-The generator will mopdify the maze by removing walls between cells, now the maze becoems fully connected (there now exists a route through the maze), then the function returns the generated maze. 
+The generator will modify the maze by removing walls between cells, now the maze becomes fully connected (there now exists a route through the maze), then the function returns the generated maze. 
 
-Before we can solve or visualise the maze, we "open" the maze so there' an entrance and exit:
+Before we can solve or visualise the maze, we "open" the maze so there is an entrance and exit:
 
 ```python
 >>> maze.openMaze()
@@ -35,14 +35,14 @@ Now we're in a position to solve the maze using the A* Solver:
 >>> path = aStarSolver(maze)
 ```
 
-The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path (path[0])is the start cell and the last element (path[-1]) is the end cell.
+The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path (path[0]) is the start cell and the last element (path[-1]) is the end cell.
 
 The length of the path can be checked:
 
 ```python
 >>> print(len(path))
 ```
-A positive integer will be printed(larger mazes typically print longer paths). 
+A positive integer will be printed (larger mazes typically print longer paths). 
 
 We can compare solvers by also solving the maze using the left-hand rule:
 
@@ -61,12 +61,12 @@ Finally, we can visualise the generated maze. This will open a Pygame window and
 >>> visualiseMaze(maze)
 ```
 
-In return a Pygame window opens showing the maze strcuture.
+In return a Pygame window opens showing the maze structure.
 
 
 ## How to guides
 ### How to generate a maze with DFS
-Use theis when you want a standard maze quickly.
+Use this when you want a standard maze quickly.
 
 **Steps:**
 
@@ -80,7 +80,7 @@ Use theis when you want a standard maze quickly.
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
->>> maze,openMaze()
+>>> maze.openMaze()
 ```
 The maze is generated (walls removed between many cells) and the entrance and exit are oepn (start top-left, end bottom-right).
 
@@ -89,7 +89,7 @@ Use this when you want a different "style" of maze without changing anything els
 
 **Steps:**
 
-1. Swap the generator fucntion you call.
+1. Swap the generator function you call.
    ```python
    >>> from maze import Maze
    >>> from mazeGenerators import primsGenerator, wilsonGenerator
@@ -104,7 +104,7 @@ Use this when you want a different "style" of maze without changing anything els
 You will get a maze of the same size but with a different structure.
 
 ### How to solve a maze with A* (shortest route)
-Use this when you want an efficeint path from start to end.
+Use this when you want an efficient path from start to end.
 
 **Steps:**
 
@@ -130,12 +130,12 @@ This will give:
 - Printing `len(path)` outputs a positive integer.
 
 ### How to solve a maze using the human left-hand or right-hand rule.
-Use this when you want a 'human-style" route that may not be shortest.
+Use this when you want a 'human-style" route that may not be the shortest path.
 
 **Steps:** 
 
 1. Generate a maze.
-2. Call `humanSolver` with a rule.
+2. Call `humanSolver` with a rule (left hand or right hand).
 
 ```python
 >>> from maze import Maze
@@ -196,7 +196,7 @@ Use this when you want to view the maze layout in a window.
 This will open a Pygame window, where the maze windows are drawn. 
 
 ### How to compare solvers on the same maze.
-Use this when you want to compare "efficiency" of different solvers usin a simple metric like path length.
+Use this when you want to compare "efficiency" of different solvers using a simple metric like path length.
 
 **Steps:**
 1. Generate **one** maze.
@@ -248,7 +248,7 @@ In pyMaze each cell stores four wall flags: north, east, south, west. This repre
 - Solving moves only through open walls, 
 - Visualisation draws whichever walls remain.
 
-This wall based model makes it easy to switch between different genrators and solvers without changing how the maze is stored.
+This wall based model makes it easy to switch between different generators and solvers without changing how the maze is stored.
 
 ### Neighbours vs reachable cells.
 pyMaze uses two useful ideas:
@@ -258,9 +258,9 @@ pyMaze uses two useful ideas:
 This is useful beacuse generators will often check neighbours to decide where to carve and solvers must use reachable cells so they don't "walk through walls".
 
 ### Maze generation. 
-Maze generation starts will all walls present, then the algorithm adds edges by removing walls between neighbouring cells to build a connected maze. Each time we remove a wall between 2 adjacent cells we add an edge.
+Maze generation starts with all walls present, then the algorithm adds edges by removing walls between neighbouring cells to build a connected maze. Each time we remove a wall between 2 adjacent cells we add an edge.
 
-A generator algorithm is essentially a rule for deciding which walls to remove to build a desirable maze. Different rules create differenmt maze characteristics (corridor length, branching, number of dead ends), even when they satisify the same core properties (connectivity, no loops).
+A generator algorithm is essentially a rule for deciding which walls to remove to build a desirable maze. Different rules create different maze characteristics (corridor length, branching, number of dead ends), even when they satisify the same core properties (connectivity, no loops).
 
 #### DFS generation (depth-first carving)
 The DFS- style generator explores "as far as possible" before backtracking:
@@ -284,7 +284,7 @@ Wilson's algorithm generates a maze using random walks:
 1. Start with one visited cell.
 2. Pick an unvisted cell and perform a random walk until it reaches the visited set. 
 3. If the walk forms a loop, erase the loop (loop-erasure).
-4. Carve a passages along the remaining walk, and marking those cells as visted. 
+4. Carve a passage along the remaining walk, and marking those cells as visted. 
 
 The loop-erasure step is the key idea: it prevents cycles and produces mazes that look more "uniform" (less biased).
 
@@ -319,7 +319,7 @@ Because the mouse makes random decisions, the path it produces is usally:
 From a modelling viewpoint, the mouse solver is useful beacuse it represents a "no strategy" baseline - like someone exploring without a plan. 
 
 ### Difficulty and comparison.
-Maze diffciulty is subjective, so pyMaze treats it as something we define using measureable features like the the shortest path length. We compare legnths of routes as typically a maze with a longer route often feels harder.
+Maze diffciulty is subjective, so pyMaze treats it as something we define using measureable features like the the shortest path length. We compare lengths of routes as typically a maze with a longer route often feels harder.
 
 ### Maze visualisation. 
 pyMaze visualises the maze by drawing cell's walls (north/ east/ south/ west) on a grid. Conceptually, visualisation is a seperate layer from the maze mathematics as vsiualisation dispalys the structure for user interpretation but generation and solving operate on the abstract structure.
