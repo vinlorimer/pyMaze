@@ -67,8 +67,8 @@ class Maze():
 
         for row in range(self.rows):
             tempRowList = []
-            for col in range(self.columns):
-                cell = Cell(row, col)
+            for column in range(self.columns):
+                cell = Cell(row, column)
                 tempRowList.append(cell)
             grid.append(tempRowList)
 
@@ -118,7 +118,7 @@ class Maze():
         unvisitedNeighbours = []
         
         for neighbour in cellNeighbours:
-            if neighbour.visited is False:
+            if neighbour.visited == False:
                 unvisitedNeighbours.append(neighbour)
 
         return unvisitedNeighbours
