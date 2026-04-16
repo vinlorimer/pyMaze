@@ -117,7 +117,7 @@ def wilsonsGenerator(maze: Maze):
             
             if randomNeighbour in walkpath:
                 loopStart = walkpath.index(randomNeighbour)
-                walkpath = walkpath[:loopStart + 1]
+                walkpath = walkpath[:loopStart + 1] 
                 currentCell = walkpath[-1]
             elif randomNeighbour.visited == True:
                 walkpath.append(randomNeighbour)
@@ -133,5 +133,7 @@ def wilsonsGenerator(maze: Maze):
             if cell.visited == False:
                 cell.visited = True
                 allCells.remove(cell)
+
+    #### DOCSTRING NOT FINISHED LOOK OVER
 
     return maze
