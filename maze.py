@@ -1,6 +1,6 @@
 class Cell:
     """
-    A class to represent cells within the maze.
+    A class to represent a cell within the maze.
     """
     def __init__(self, row: int, column: int):
         """
@@ -8,14 +8,18 @@ class Cell:
 
         Parameters
         ---
-        row: int | the row that the cell resides in (y coordinate)
-        column: int | the column that the cell resides in (x coordinate)
+        row: int | The row that the cell resides in (y coordinate)
+        column: int | The column that the cell resides in (x coordinate)
 
         Attributes
         ---
-        row & column to store the coordinate of the cell within the grid of the maze
-        visited property to know if a cell has been visited or not
-        a property for each cardinal directions wall
+        row | the cell's row position
+        column | the cell's column position
+        visited | the boolean value of whether or not a cell has been visited
+        NWall | the boolean value to represent the north wall
+        EWall | the boolean value to represent the east wall
+        SWall | the boolean value to represent the south wall
+        WWall | the boolean value to represent the west wall
         """
         self.row = row
         self.column = column
@@ -27,7 +31,7 @@ class Cell:
 
 class Maze:
     """
-    A class for the maze, with useful functions to aid in both generation & solving.
+    A class to represent a maze with useful methods to help in generation and solving said maze.
     """
     def __init__(self, rows: int, columns: int):
         """
@@ -35,14 +39,16 @@ class Maze:
 
         Parameters
         ---
-        rows: int | the number of rows that the maze should be constructed with.
-        columns: int | the number of columns that the maze should be constructed with.
+        rows: int | The number of rows in the maze.
+        columns: int | The number of columsn in the maze.
 
         Attributes
         ---
-        rows & columns are the dimensions of the maze
-        grid property uses a method stated just below to create the grid of cells that represent the maze
-        startcell & endcell are hardcoded as I want it to always start top left and end bottom right B)
+        rows | The number of rows in the maze.
+        columns | The number of columns in the maze.
+        grid | The 2D list of cell objects that represent the maze.
+        startCell | Top left cell of the maze.
+        endCell | Bottom right cell of the maze.
         """
         self.rows = rows
         self.columns = columns
@@ -52,13 +58,11 @@ class Maze:
 
     def createGrid(self):
         """
-        A method to create the mazes grid.
-        To do this it uses nested iteration to iterate through each row and for each row iterate through all columns on that row 
-        and create a cell object, add each cell to a temporary list, when at the end of that row add it all to the grid
+        A method to create the grid for the maze.
 
         Returns
         ---
-        grid | a list that represents the grid of cells
+        grid | The 2D list of cell objects that represent the maze.
         """ 
         grid = []
 
@@ -73,16 +77,15 @@ class Maze:
        
     def getNeighbours(self, cell: Cell):
         """
-        A method to get all surrounding AND IN BOUND cells around a specified cell.
-        To do this just uses simple if checks to check indexing of cell coordinates with mazes total rows/columns.
+        A method to return all adjacent in-bound neighbouring cells of the specified cell.
 
-        Paramters
+        Parameters
         ---
-        cell: Cell | takes a cell as an argument to look around.
-
+        cell: Cell | The cell whose neighbours we look for.
+        
         Returns
         ---
-        neighbours | a list of all surrounding cells that are in bounds of the maze
+        neighbours | A list of the neighbouting cells.
         """
         neighbours = []
 
@@ -99,17 +102,15 @@ class Maze:
 
     def getUnvisited(self, cell: Cell):
         """
-        A method to get all unvisited cells around a specified cell.
-        To do this uses the neighbours method to get all a cells neighbours then iterates through each one checking its visited
-        property.
-
+        A method to get all unvisited neighbouring cells around the specified cell.
+        
         Paramters
         ---
-        cell: Cell | Takes a cell as an argument to check if its neighbours are unvisited or not.
-
+        cell: Cell | The cell whose neighbours are checked.
+        
         Returns
         ---
-        unvisitedNeighbours | A list of all cell(s) around the specified cell that have their property visited == false.
+        unvisitedNeighbours | A list of the neighbouring cells whose visited attribute is false.
         """
         cellNeighbours = self.getNeighbours(cell)
         unvisitedNeighbours = []
@@ -122,9 +123,7 @@ class Maze:
     
     def removeWall(self, cell: Cell, otherCell: Cell):
         """
-        A method to remove the walls between two specified cells.
-        To do this it uses conditional statements to check where in relation with each other the two cells are, then removes the
-        corresponding walls by changing the two cells attributes.
+        Removes the walls between two neighbouring cells.
 
         Parameters
         ---
@@ -147,21 +146,19 @@ class Maze:
 
     def openMaze(self):
         """
-        A method to "open" the maze.
-        Since start cell and end cell are hardcoded we know to always remove the north and south wall respectively... thats it.
+        A method to open the maze entrance and exit by removing the north wall of the start cell
+        and the south wall of the end cell.
         """
         self.startCell.NWall = False
         self.endCell.SWall = False
     
     def getCells(self):
         """
-        A method to create a list of all cells within the maze.
-        To do this create an empty list, then iterate through each row in the maze then as each row is a list iterate through that
-        row and add each cell into the list.
+        A method to return a list of all the cells within the maze.
 
         Returns
         ---
-        cells | list of all cells in the maze
+        cells | A list containing every cell in the maze.
         """
         cells = []
         for row in self.grid:
@@ -173,14 +170,12 @@ class Maze:
 
     def getReachableCells(self, cell: Cell):
         """
-        A method to get all reachable cells i.e. check for cells that have no walls between them
-        To do this create an empty list, then use conditional statements to check if the cells around the specified cell
-        are in bounds of the maze and if the wall in that direction exists or not. If it is in bounds and the wall doesn't exist
-        then add it to the list.
+        A method to get all the cells that can be directly reached from the specified cell.
+        The cells are "reachable" if it is a neighbouring cell and there is no walls between them.
 
         Paramters
         ---
-        cell: Cell | Takes a cell to check around
+        cell: Cell | The cell whose neighbours need to be checked if reachable.
 
         Returns
         ---
