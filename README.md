@@ -57,8 +57,9 @@ The left hand rule will usually produce a valid route, but it may be longer than
 Finally, we can visualise the generated maze. This will open a Pygame window and draw the maze walls:
 
 ```python
->>> from mazeVisualiser import visualiseMaze
->>> visualiseMaze(maze)
+from mazeVisualiser import visualiseMaze
+
+visualiseMaze(maze)
 ```
 
 In return a Pygame window opens showing the maze structure.
@@ -191,9 +192,9 @@ Use this when you want to view the maze layout in a window.
 2. Call `visualiseMaze(maze)`.
 
 ```python
->>> from mazeVisualisers import visualiseMaze
+from mazeVisualisers import visualiseMaze
 
->>> visualiseMaze(maze)
+visualiseMaze(maze)
 ```
 
 This will open a Pygame window, where the maze walls are drawn. 
