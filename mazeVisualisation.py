@@ -3,11 +3,32 @@ import pygame
 
 class mazeVisualiser:
     """
-    Class to visualise mazes using the library pyGame
+    Class to visualise mazes using the library pyGame.
     """
-    def __init__(self, maze, windowWidth=800, windowHeight=800, margin=20):
+    def __init__(self, maze, windowWidth: int=800, windowHeight: int=800, margin: int=20):
         """
-        TO DO
+        A method to construct the mazeVisualiser class.
+
+        Parameters
+        ---
+        maze: Maze | takes a maze to visualise
+        windowWidth: int | the width of the display window, default 800
+        windowHeight: int | the height of the display window default 800
+        margin: int | the margin around the maze inside of the window, default being 20
+
+        Attributes
+        ---
+        screen | the display window used to draw the maze
+        clock | a pygame clock used to control the speed of event loops
+        backgroundColour | the colour of the background in RGB (white)
+        wallColour | the colour of walls within the maze in RGB (black)
+        startCellColour | the colour of the starting cell in RGB (green)
+        endCellColour | the colour of the ending cell in RGB (red)
+        pathCellColour | the colour of the path taken by any given solver in RGB (blue) 
+        font | the font for the text to be used in displaying length of solutions
+        cellSize | the size of each cell in pixels, the largest value that lets all cells fit inside the window
+        offsetX | the x axis offset used to centre the maze
+        offsetY | the y axis offset used to centre the maze
         """
         self.maze = maze
         self.windowWidth = windowWidth
@@ -23,17 +44,24 @@ class mazeVisualiser:
         self.wallColour = (0,0,0)
         self.startCellColour = (0,200,0)
         self.endCellColour = (200,0,0)
-        self.pathCellsColour = (50,100,255)
+        self.pathCellsColour = (0,0,200)
+        self.font = pygame.font.SysFont(None, 30)
 
-        self.cellSize = min((self.windowWidth - 2 * self.margin) // self.maze.columns, (self.windowHeight - 2 * self.margin) // self.maze.rows)
-        mazePixelWidth = self.maze.columns * self.cellSize
-        mazePixelHeight = self.maze.rows * self.cellSize
-        self.offsetX = (self.windowWidth - mazePixelWidth) // 2
-        self.offsetY = (self.windowHeight - mazePixelHeight) // 2
+        self.cellSize = min((self.windowWidth - self.margin) // self.maze.columns, (self.windowHeight - self.margin) // self.maze.rows)
+        self.offsetX = (self.windowWidth - self.maze.columns * self.cellSize) // 2
+        self.offsetY = (self.windowHeight - self.maze.rows * self.cellSize) // 2
 
     def getCellRect(self, cell):
         """
-        TO DO
+        A method to get a rectangle representing any given cell.
+
+        Parameters
+        ---
+        cell: Cell | the given cell
+
+        Returns
+        ---
+        A pygame rectangle in the position of given cell & correct size of the cell
         """
         x = self.offsetX + cell.column * self.cellSize
         y = self.offsetY + cell.row * self.cellSize
@@ -41,19 +69,26 @@ class mazeVisualiser:
 
     def drawMaze(self, path=None):
         """
-        TO DO
+        A method to draw the maze. It does this by creating a window and filling it with the background colour, then if there is 
+        a path, add each cells coordinates to the path coordinates set. Then, go through each row in the maze and then each cell in 
+        the row and create a rectangle for that cell, then just a few conditional checks if its a path, start or end cell, if it is 
+        none of these then it must be an unused cell, so check for its walls and draw them.
+
+        Parameters
+        ---
+        path: list | A list of cells that solve the maze, by default path is none.
         """
         self.screen.fill(self.backgroundColour)
-        pathCoords = set()
+        pathCoordinates = set()
         if path is not None:
             for cell in path:
-                pathCoords.add((cell.row, cell.column))
+                pathCoordinates.add((cell.row, cell.column))
 
         for row in self.maze.grid:
             for cell in row:
                 rect = self.getCellRect(cell)
 
-                if (cell.row, cell.column) in pathCoords:
+                if (cell.row, cell.column) in pathCoordinates:
                     pygame.draw.rect(self.screen, self.pathCellsColour, rect)
 
                 if cell == self.maze.startCell:
@@ -73,31 +108,28 @@ class mazeVisualiser:
 
         pygame.display.flip()
 
-    def waitForKey(self):
+    def visualise(self, path=None):
         """
-        TO DO
+        A method to draw the maze, if there is a solution path then work out the length of that path and put display that onto the
+        window. Otherwise loop waiting for the user to either close the window or do any keyboard input.
+
+        Paramters
+        ---
+        path: list | A list of cells that solve the maze, by default path is none.
         """
-        waiting = True
-        while waiting:
+        self.drawMaze(path)
+        if path is not None:    
+            pathLength = len(path) - 1
+            text = self.font.render(f"Path length: {pathLength}", True, (0, 0, 0))
+            self.screen.blit(text, (0, 0))
+            pygame.display.flip()
+
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     raise SystemExit
                 if event.type == pygame.KEYDOWN:
-                    waiting = False
+                    return
 
             self.clock.tick(60)
-
-    def keepOpen(self):
-        """
-        TO DO
-        """
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-            self.clock.tick(60)
-
-        pygame.quit()
