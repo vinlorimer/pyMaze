@@ -3,22 +3,21 @@ import random as rnd
 
 def DFSGenerator(maze: Maze, seed = None):
     """
-    A function to generate a maze using a depth first search algorithm.
-    To do this, it first sets the current cell to the starting cell and marks it as visited, it then calculates how many cells in
-    total there are in the maze, starts counting how many cells have been visited and creates an empty stack.
+    A function to generate a maze using a depth-first search algorithm.
 
-    Then, while there are unvisited cells, it gets all unvisited neighbours of the current cell, if there are unvisited neighbours
-    then choose a random neighbour, add the current cell to the stack remove the walls between the current cell and random neighbour
-    then make the random neighbour the new current cell and set it to visited, add one to the visited counter. If there are no
-    unvisited neighbours then backtrack to a previous cell until there are unvisited neighbours.
+    The algorithm works by starting at the start cell, marking it as visited,
+    then continuously move to a random UNVISITED neighbour. When there are no 
+    more unvisited neighbours, backtrack until at a cell that does have unvisited
+    neighbours. Continue until all cells are visited.
 
     Parameters
     ---
-    maze: Maze | Takes a maze to manipulate
-
+    maze: Maze | The maze to generate.
+    seed: int | Optional random seed so mazes can be reproduced & compared.
+    
     Returns
     ---
-    maze | Returns the post generated maze
+    maze | The generated maze.
     """
     rng = rnd.Random(seed)
     currentCell = maze.startCell
@@ -44,22 +43,23 @@ def DFSGenerator(maze: Maze, seed = None):
 
 def primsGenerator(maze: Maze, seed = None):
     """
-    A function to generate a maze using Prims Algorithm. 
-    To do this, the function first chooses a random cell as the starting cell and setting it to having been visited. Then get all 
-    unvisited cells around the starting cell and add them to be possible candidates to move to. While there are still candidates,
-    choose a random cell from the candidates to be the current cell and remove it from being a candidate, then get all of the
-    neighbours around that current cell. Create a list of all the neighbours around the current cell that HAVE been visited
-    then choose a random visited neighbour and remove the walls between the current cell and that neighbour and mark the 
-    current cell as visited. Get all the unvisited neighbours of the current cell iterate through them, and if that unvisited
-    neighbour isn't already a candidate then add it to the list of candidate cells.
+    A function to generate a maze using Prim's algorithm.
+
+    The algorithm works by choosing a random starting cell, and marking it as visited
+    All unvisited neighbours of the current cell are added to a list of "candidate cells"
+    While there are candidate cells, one is chosen randomly and then connected to by a 
+    random already VISITED neighbour, then the candidate cell is marked as visited and 
+    any UNVISITED neighbour cells are added to the candidate list. Continue until all cells
+    are visited.
 
     Parameters
     ---
-    maze: Maze | Takes a maze to manipulate
-
+    maze: Maze | The maze to generate.
+    seed: int | Optional random seed so mazes can be reproduced & compared.
+    
     Returns
     ---
-    maze | Returns the post generated maze
+    maze | The generated maze.
     """
     rng = rnd.Random(seed)
     startCell = maze.grid[rng.randint(0, maze.rows-1)][rng.randint(0, maze.columns-1)]
@@ -90,19 +90,22 @@ def primsGenerator(maze: Maze, seed = None):
 
 def wilsonsGenerator(maze: Maze, seed = None):
     """
-    A function to generate a maze using Wilson's Algorithm.
-    To do this, we create a list of all the cells, then choose one at "random" removing the chosen one from our list and marking
-    it as visited. While there are cells in the list pick a random cell from the list and add it to the walkpath of the generator.
-    While the current cell is unvisited get all of its neighbours and pick a random neighbour, then if that neighbour has already 
-    been added to the walkpath
+    A function to generate a maze using Wilson's algorithm.
 
-    Paramters
+    The algorithm works by marking a random cell as visited, then it continuously selects
+    a random unvisited cell and performs a random walk until it reaches a visited cell. If 
+    the walk forms a loop, the loop is removed. Once the walk hits a visited cell, the path is
+    put into the maze and all cells in the path are marked as visited. Continue until all cells 
+    are visited.
+
+    Parameters
     ---
-    maze: Maze | Takes a maze to manipulate
-
+    maze: Maze | The maze to generate.
+    seed: int | Optional random seed so mazes can be reproduced & compared.
+    
     Returns
     ---
-    maze | Returns the post generated maze
+    maze | The generated maze.
     """
     rng = rnd.Random(seed)
     allCells = maze.getCells()
@@ -136,7 +139,5 @@ def wilsonsGenerator(maze: Maze, seed = None):
             if cell.visited == False:
                 cell.visited = True
                 allCells.remove(cell)
-
-    #### DOCSTRING NOT FINISHED LOOK OVER
 
     return maze

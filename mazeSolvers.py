@@ -3,9 +3,19 @@ import random as rnd
 
 def mouseSolver(maze: Maze, maxSteps: int = 10000):
     """
+    A function to solve the maze by completely random movement.
 
-    TO DO
+    The solver starts at the maze's starting cell and then continuously chooses a random 
+    reachable neighbouring cell until it reaches the end or hits its maxSteps limit.
     
+    Parameters
+    ---
+    maze: Maze | The maze to solve.
+    maxSteps: int | The maximum number of steps the "mouse" is allowed to take.
+    
+    Returns
+    ---
+    path: list | The list of cells representing the path taken by the "mouse".
     """
 
     currentCell = maze.startCell
@@ -25,9 +35,19 @@ def mouseSolver(maze: Maze, maxSteps: int = 10000):
 
 def humanSolver(maze: Maze, rule = "L"):
     """
+    A function to solve the maze "humanly" using the left/right-hand wall following rule.
 
-    TO DO
+    The solver starts at the starting cell then moves through the maze keeping its left/right "hand" in contact
+    with the wall depending on the rule. This is continued until the path reaches the end cell.
 
+    Parameters
+    ---
+    maze: Maze | The maze to solve.
+    rule: str | The rule to use, accepts any form of "r"/"right" or "l"/"left" for the corresponding rule.
+
+    Returns
+    ---
+    path: list | The list of cells representing the path taken by the solver.
     """
     currentCell = maze.startCell
     endCell = maze.endCell
@@ -89,9 +109,19 @@ def humanSolver(maze: Maze, rule = "L"):
 
 def aStarSolver(maze: Maze):
     """
+    A function to solve the maze using the A* algorithm.
 
-    TO DO
+    The solver starts at the starting cell of the maze and explores reachable cells based off of the lowest
+    estimated total cost of traveling there. The cost is calculated by using the current travelled distance and the Manhattan distance
+    to the end cell. Once the end cell is reached, the shortest path is used.
 
+    Parameters
+    ---
+    maze: Maze | The maze to solve.
+
+    Returns
+    ---
+    path: list | The list of cells representing the path taken by the solver.
     """
     startCell = maze.startCell
     endCell = maze.endCell

@@ -3,32 +3,36 @@ import pygame
 
 class mazeVisualiser:
     """
-    Class to visualise mazes using the library pyGame.
+    A class to visualise mazes using the library pyGame.
     """
     def __init__(self, maze, windowWidth: int=800, windowHeight: int=800, margin: int=20):
         """
-        A method to construct the mazeVisualiser class.
+        A method to construct the class.
 
         Parameters
         ---
-        maze: Maze | takes a maze to visualise
-        windowWidth: int | the width of the display window, default 800
-        windowHeight: int | the height of the display window default 800
-        margin: int | the margin around the maze inside of the window, default being 20
+        maze: Maze | The maze to visualise.
+        windowWidth: int | The width of the display in pixels, default 800.
+        windowHeight: int | The height of the display window in pixels, default 800.
+        margin: int | The margin around the maze inside of the window in pixels, default being 20.
 
         Attributes
         ---
-        screen | the display window used to draw the maze
-        clock | a pygame clock used to control the speed of event loops
-        backgroundColour | the colour of the background in RGB (white)
-        wallColour | the colour of walls within the maze in RGB (black)
-        startCellColour | the colour of the starting cell in RGB (green)
-        endCellColour | the colour of the ending cell in RGB (red)
-        pathCellColour | the colour of the path taken by any given solver in RGB (blue) 
-        font | the font for the text to be used in displaying length of solutions
-        cellSize | the size of each cell in pixels, the largest value that lets all cells fit inside the window
-        offsetX | the x axis offset used to centre the maze
-        offsetY | the y axis offset used to centre the maze
+        maze | Stores the maze being visualised
+        windowWidth | Stores the width of the window.
+        windowHeight | Stores the height of the window.
+        margin | Stores the margin of the window.
+        screen | The display window used to draw the maze.
+        clock | A pygame clock used to control the speed of event loops.
+        backgroundColour | The colour of the background in RGB (white).
+        wallColour | The colour of walls within the maze in RGB (black).
+        startCellColour | The colour of the starting cell in RGB (green).
+        endCellColour | The colour of the ending cell in RGB (red).
+        pathCellColour | The colour of the path taken by any given solver in RGB (blue) .
+        font | The font fr the text to be used in displaying length of solutions.
+        cellSize | The size of each cell in pixels.
+        offsetX | The x axis offset used to centre the maze.
+        offsetY | The y axis offset used to centre the maze.
         """
         self.maze = maze
         self.windowWidth = windowWidth
@@ -53,15 +57,15 @@ class mazeVisualiser:
 
     def getCellRect(self, cell):
         """
-        A method to get a rectangle representing any given cell.
+        A method to get a rectangle representing the size and position of a given cell.
 
         Parameters
         ---
-        cell: Cell | the given cell
+        cell: Cell | The given cell.
 
         Returns
         ---
-        A pygame rectangle in the position of given cell & correct size of the cell
+        rect: pygame.Rect | A rectangle representing the given cell.
         """
         x = self.offsetX + cell.column * self.cellSize
         y = self.offsetY + cell.row * self.cellSize
@@ -69,14 +73,14 @@ class mazeVisualiser:
 
     def drawMaze(self, path=None):
         """
-        A method to draw the maze. It does this by creating a window and filling it with the background colour, then if there is 
-        a path, add each cells coordinates to the path coordinates set. Then, go through each row in the maze and then each cell in 
-        the row and create a rectangle for that cell, then just a few conditional checks if its a path, start or end cell, if it is 
-        none of these then it must be an unused cell, so check for its walls and draw them.
+        A method that draws the maze to the display window.
+
+        The maze background is first drawn ,followed by any path cells, the start & end cells, then finally
+        the walls are drawn for each cell.
 
         Parameters
         ---
-        path: list | A list of cells that solve the maze, by default path is none.
+        path: list | An optional list of cells represnting the solution path.
         """
         self.screen.fill(self.backgroundColour)
         pathCoordinates = set()
@@ -110,12 +114,14 @@ class mazeVisualiser:
 
     def visualise(self, path=None):
         """
-        A method to draw the maze, if there is a solution path then work out the length of that path and put display that onto the
-        window. Otherwise loop waiting for the user to either close the window or do any keyboard input.
+        A method to display the maze and its solutions.
 
-        Paramters
+        If there is a path provided then the path is drawn and its length worked out and displayed. The display window stays open
+        until the user exits it or presses any key on their keybaord.
+
+        Parameters
         ---
-        path: list | A list of cells that solve the maze, by default path is none.
+        path: list | An optional list of cells represnting the solution path.
         """
         self.drawMaze(path)
         if path is not None:    
