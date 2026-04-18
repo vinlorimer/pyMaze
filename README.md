@@ -8,12 +8,16 @@ We start by importing Maze from maze and creating a 20x20 maze.
 ```python
 >>> from maze import Maze
 >>> maze = Maze(rows=20, columns=20)
-``` 
+```
 
 From this a `Maze` object is created containing a 20x20 grid of cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
 Now we generate the maze using the DFS-based generator:
+
 ```python
+>>> import random as rnd
+>>> rnd.seed(0)
+
 >>> from mazeGenerators import DFSGenerator
 >>> maze = DFSGenerator(maze)
 ```
@@ -40,8 +44,11 @@ The path is then given as a list of cell objects describing a valid route from s
 The length of the path can be checked:
 
 ```python
+>>> len(path) > 0
+True
 >>> print(len(path))
 ```
+
 A positive integer will be printed (larger mazes typically print longer paths). 
 
 We can compare solvers by also solving the maze using the left-hand rule:
@@ -49,7 +56,9 @@ We can compare solvers by also solving the maze using the left-hand rule:
 ```python
 >>> from mazeSolvers import humanSolver
 >>> human_path = humanSolver(maze, rule="L")
-print(len(human_path))
+>>> len(human_path) > 0
+True
+>>> print(len(human_path))
 ```
 
 The left hand rule will usually produce a valid route, but it may be longer than the A* route. 
@@ -58,7 +67,6 @@ Finally, we can visualise the generated maze. This will open a Pygame window and
 
 ```python
 from mazeVisualiser import visualiseMaze
-
 visualiseMaze(maze)
 ```
 
@@ -77,12 +85,15 @@ Use this when you want a standard maze quickly.
 
 ```python 
 >>> from maze import Maze
+>>> import random as rnd
+>>> rnd.seed(0)
 >>> from mazeGenerators import DFSGenerator
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
 >>> maze.openMaze()
 ```
+
 The maze is generated (walls removed between many cells) and the entrance and exit are oepn (start top-left, end bottom-right).
 
 ### How to generate a maze with a different algorithm (Prim/ Wilson)
@@ -94,9 +105,11 @@ Swap the generator function you call.
 
 ```python
 >>> from maze import Maze
+>>> import random as rnd
+>>> rnd.seed(0)
 >>> from mazeGenerators import primsGenerator, wilsonsGenerator
 
->>> aze = Maze(rows=20, columns=20)
+>>> maze = Maze(rows=20, columns=20)
 
 >>> # Choose ONE:
 >>> maze = primsGenerator(maze)
@@ -116,17 +129,22 @@ Use this when you want an efficient path from start to end.
 2. Solve the maze using `aStarSolver`.
 
 ```python
-from maze import Maze
-from mazeGenerators import DFSGenerator
-from mazeSolvers import aStarSolver
+>>> from maze import Maze
+>>> from mazeGenerators import DFSGenerator
+>>> import random as rnd
+>>> rnd.seed(0)
+>>> from mazeSolvers import aStarSolver
 
-maze = Maze(rows=20, columns=20)
-maze = DFSGenerator(maze)
-maze.openMaze()
+>>> maze = Maze(rows=20, columns=20)
+>>> maze = DFSGenerator(maze)
+>>> maze.openMaze()
 
-path = aStarSolver(maze)
-print(len(path))
+>>> path = aStarSolver(maze)
+>>> len(path) > 0
+True
+>>> print(len(path))
 ```
+
 This will give:
 - A path by a list of cell objects.
 - path[0] is th start cell (`maze.startCell`).
@@ -144,6 +162,8 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
+>>> import random as rnd
+>>> rnd.seed(0)
 >>> from mazeSolvers import humanSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -152,7 +172,10 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 
 >>> left_path = humanSolver(maze, rule="L")
 >>> right_path = humanSolver(maze, rule="R")
-
+>>> len(left_path) > 0
+True
+>>> len(right_path) > 0
+True
 >>> print(len(left_path), len(right_path))
 ```
 
@@ -170,6 +193,8 @@ Use this when you want a path that behaves like random wandering.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
+>>> import random as rnd
+>>> rnd.seed(0)
 >>> from mazeSolvers import mouseSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -177,7 +202,8 @@ Use this when you want a path that behaves like random wandering.
 >>> maze.openMaze()
 
 >>> mouse_path = mouseSolver(maze, maxSteps=10000)
-
+>>> len(mouse_path) > 0
+True
 >>> print(len(mouse_path))
 ```
 
@@ -214,10 +240,17 @@ Use this when you want to compare "efficiency" of different solvers using a simp
 >>> left_hand_path = humanSolver(maze, rule="L")
 >>> mouse_path = mouseSolver(maze, maxSteps=10000)
 
+>>> len(a_star_path) > 0
+True
+>>> len(left_hand_path) > 0
+True
+>>> len(mouse_path) > 0
+True
 >>> print("A* steps:", len(a_star_path))
 >>> print("Left-hand steps:", len(left_hand_path))
->>> print("Mouse steps:", len(mouse-path))
+>>> print("Mouse steps:", len(mouse_path))
 ```
+
 For each route a positive integer will be returned. A* should usually produce the shortest route (fewest steps). Human and mouse solvers will typically take more steps.
 
 ## Explanation.
