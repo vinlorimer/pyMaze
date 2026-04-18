@@ -36,7 +36,7 @@ def humanSolver(maze: Maze, rule = "L"):
     directions = []
 
     while currentCell != endCell:
-        if rule == "L" or rule == "left":
+        if rule.upper() == "L" or rule.upper() == "LEFT":
             if facing == "N":
                 directions = ["W", "N", "E", "S"]
             elif facing == "S":
@@ -46,7 +46,7 @@ def humanSolver(maze: Maze, rule = "L"):
             elif facing == "W":
                 directions = ["S", "W", "N", "E"]
 
-        elif rule == "R" or rule == "right":
+        elif rule.upper() == "R" or rule.upper() == "RIGHT":
             if facing == "N":
                 directions = ["E", "N", "W", "S"]
             elif facing == "S":
