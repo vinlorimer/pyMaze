@@ -1,4 +1,4 @@
-class Cell():
+class Cell:
     """
     A class to represent cells within the maze.
     """
@@ -11,7 +11,7 @@ class Cell():
         row: int | the row that the cell resides in (y coordinate)
         column: int | the column that the cell resides in (x coordinate)
 
-        Properties
+        Attributes
         ---
         row & column to store the coordinate of the cell within the grid of the maze
         visited property to know if a cell has been visited or not
@@ -25,7 +25,7 @@ class Cell():
         self.SWall = True
         self.WWall = True
 
-class Maze():
+class Maze:
     """
     A class for the maze, with useful functions to aid in both generation & solving.
     """
@@ -38,7 +38,7 @@ class Maze():
         rows: int | the number of rows that the maze should be constructed with.
         columns: int | the number of columns that the maze should be constructed with.
 
-        Properties
+        Attributes
         ---
         rows & columns are the dimensions of the maze
         grid property uses a method stated just below to create the grid of cells that represent the maze
@@ -124,7 +124,7 @@ class Maze():
         """
         A method to remove the walls between two specified cells.
         To do this it uses conditional statements to check where in relation with each other the two cells are, then removes the
-        corresponding walls by changing the two cells properties.
+        corresponding walls by changing the two cells attributes.
 
         Parameters
         ---
