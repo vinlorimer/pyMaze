@@ -13,6 +13,7 @@ def testCellInit():
     Tests that the cell is constructed properly.
     """
     cell = Cell(6,7)
+
     assert cell.row == 6, "expected cell row 6"
     assert cell.column == 7, "expected cell row 7"
     assert cell.visited is False, "expected visited to be false"
@@ -43,7 +44,6 @@ def testCreateGrid():
     """
     Tests that createGrid creates all cells correctly
     """
-
     maze = Maze(4,20)
 
     for row in range(maze.rows):
@@ -60,11 +60,10 @@ def testGetNeighboursTopLeft():
     """
     maze = Maze(3, 3)
     cell = maze.grid[0][0]
-
     neighbours = maze.getNeighbours(cell)
     neighboursCoordinates = getCellCoordinates(neighbours)
-
     expectedCoordinates = {(1,0),(0,1)}
+
     assert neighboursCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, got {neighboursCoordinates}"
 
 def testGetNeighboursTopEdge():
@@ -72,11 +71,10 @@ def testGetNeighboursTopEdge():
     """
     maze = Maze(3,3)
     cell = maze.grid[0][1]
-
     neighbours = maze.getNeighbours(cell)
     neighboursCoordinates = getCellCoordinates(neighbours)
-
     expectedCoordinates = {(0,0),(0,2),(1,1)}
+
     assert neighboursCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, got {neighboursCoordinates}"
 
 def testGetNeighboursMiddleCell():
@@ -84,11 +82,10 @@ def testGetNeighboursMiddleCell():
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
-
     neighbours = maze.getNeighbours(cell)
     neighboursCoordinates = getCellCoordinates(neighbours)
-
     expectedCoordinates = {(0,1),(1,2),(2,1),(1,0)}
+
     assert neighboursCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, got {neighboursCoordinates}"
 
 def testGetNeighboursBottomRight():
@@ -96,11 +93,10 @@ def testGetNeighboursBottomRight():
     """
     maze = Maze(3,3)
     cell = maze.grid[2][2]
-
     neighbours = maze.getNeighbours(cell)
     neighboursCoordinates = getCellCoordinates(neighbours)
-
     expectedCoordinates = {(1,2),(2,1)}
+
     assert neighboursCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, got {neighboursCoordinates}"
 
 def testGetUnvisitedGetsAllNeighboursWhenUnvisited():
@@ -108,11 +104,10 @@ def testGetUnvisitedGetsAllNeighboursWhenUnvisited():
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
-
     unvisitedCells = maze.getUnvisited(cell)
     unvisitedCellsCoordinates = getCellCoordinates(unvisitedCells)
-
     expectedCoordinates = {(0,1),(1,2),(2,1),(1,0)}
+
     assert unvisitedCellsCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, got {unvisitedCellsCoordinates}"
 
 def testGetUnvisitedExcludesVisitedNeigbhours():
@@ -120,14 +115,12 @@ def testGetUnvisitedExcludesVisitedNeigbhours():
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
-
     maze.grid[0][1].visited = True
     maze.grid[1][0].visited = True
-
     unvisitedCells = maze.getUnvisited(cell)
     unvisitedCellsCoordinates = getCellCoordinates(unvisitedCells)
-
     expectedCoordinates = {(2,1),(1,2)}
+
     assert unvisitedCellsCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, got {unvisitedCellsCoordinates}"
 
 def testGetUnvisitedGetsNoVisitedCells():
@@ -135,10 +128,8 @@ def testGetUnvisitedGetsNoVisitedCells():
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
-
     for neighbour in maze.getNeighbours(cell):
         neighbour.visited = True
-    
     unvisitedCells = maze.getUnvisited(cell)
 
     assert unvisitedCells == [], f"expected empty list, got {unvisitedCells}"
@@ -149,7 +140,6 @@ def testRemoveWallOpensSouthAndNorthWalls():
     maze = Maze(2,1)
     topCell = maze.grid[0][0]
     bottomCell = maze.grid[1][0]
-
     maze.removeWall(topCell, bottomCell)
 
     assert topCell.SWall is False, "expected swall to be false"
@@ -163,7 +153,6 @@ def testRemoveWallOpensNorthAndSouthWalls():
     maze = Maze(2,1)
     topCell = maze.grid[0][0]
     bottomCell = maze.grid[1][0]
-
     maze.removeWall(bottomCell, topCell)
 
     assert topCell.SWall is False, "expected swall to be false"
@@ -177,7 +166,6 @@ def testRemoveWallOpensEastAndWestWalls():
     maze = Maze(1,2)
     leftCell = maze.grid[0][0]
     rightCell = maze.grid[0][1]
-
     maze.removeWall(leftCell, rightCell)
 
     assert leftCell.EWall is False, "expected ewall to be false"
@@ -191,7 +179,6 @@ def testRemoveWallOpensWestAndEastWalls():
     maze = Maze(1,2)
     leftCell = maze.grid[0][0]
     rightCell = maze.grid[0][1]
-
     maze.removeWall(rightCell, leftCell)
 
     assert leftCell.EWall is False, "expected ewall to be false"
@@ -200,16 +187,18 @@ def testRemoveWallOpensWestAndEastWalls():
     assert rightCell.EWall is True, "expected eewall to be true"
 
 def testOpenMaze():
+    """
+    """
     maze = Maze(3,3)
-
     maze.openMaze()
 
     assert maze.startCell.NWall is False, "expected nwall to be false"
     assert maze.endCell.SWall is False, "expected swall to be false"
 
 def testOpenMazeOn1x1():
+    """
+    """
     maze = Maze(1,1)
-
     maze.openMaze()
 
     assert maze.startCell == maze.endCell, "expected start cell and end cell to be the same cell"
@@ -217,6 +206,71 @@ def testOpenMazeOn1x1():
     assert maze.startCell.SWall is False, "expected swall to be openb"
     assert maze.startCell.EWall is True, "expected ewall to be closed"
     assert maze.startCell.WWall is True, "expected wwall to be closed"
+
+def testGetCellsGetsAllCells():
+    """
+    """
+    maze = Maze(2,3)
+    cells = maze.getCells()
+
+    assert len(cells) == 6, f"expected there to be 6 cells, got {len(cells)}"
+    assert cells[0] == maze.grid[0][0], "first cell should be (0,0)"
+    assert cells[-1] == maze.grid[1][2], "final cell should be (1,2)"
+
+def testGetReachableCellsGetsNothingWhenAllWallsClosed():
+    """
+    """
+    maze = Maze(3,3)
+    cell = maze.grid[1][1]
+    reachableCells = maze.getReachableCells(cell)
+
+    assert reachableCells == [], f"expected no reachable cells, got {reachableCells}"        
+
+def testGetReachableCellsReturnsHorizontalNeighbours():
+    """
+    """
+    maze = Maze(3,3)
+    middleCell = maze.grid[1][1]
+    leftCell = maze.grid[1][0]
+    rightCell = maze.grid[1][2]
+    maze.removeWall(middleCell, leftCell)
+    maze.removeWall(middleCell, rightCell)
+    reachableCells = maze.getReachableCells(middleCell)
+    reachableCellsCoordinates = getCellCoordinates(reachableCells)
+    expectedCoordinates = {(1,0),(1,2)}
+    
+    assert reachableCellsCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, instead got {reachableCellsCoordinates}"
+
+def testGetReachableCellsReturnsVerticalNeighbours():
+    """
+    """
+    maze = Maze(3,3)
+    middleCell = maze.grid[1][1]
+    topCell = maze.grid[0][1]
+    bottomCell = maze.grid[2][1]
+    maze.removeWall(middleCell, topCell)
+    maze.removeWall(middleCell, bottomCell)
+    reachableCells = maze.getReachableCells(middleCell)
+    reachableCellsCoordinates = getCellCoordinates(reachableCells)
+    expectedCoordinates = {(0,1),(2,1)}
+    
+    assert reachableCellsCoordinates == expectedCoordinates, f"expected {expectedCoordinates}, instead got {reachableCellsCoordinates}"
+
+def testGetReachableSymmetry():
+    """
+    """
+    maze = Maze(3,3)
+    cellOne = maze.grid[0][0]
+    cellTwo = maze.grid[0][1]
+    maze.removeWall(cellOne, cellTwo)
+    reachableFromCellOne = maze.getReachableCells(cellOne)
+    reachableFromCellTwo = maze.getReachableCells(cellTwo)
+
+    assert cellTwo in reachableFromCellOne, "expected celltwo to be reachable"
+    assert cellOne in reachableFromCellTwo, "expected cellone to be reachable"
+
+
+
 
 def runAllTests():
     """
@@ -238,7 +292,12 @@ def runAllTests():
     testRemoveWallOpensWestAndEastWalls()
     testOpenMaze()
     testOpenMazeOn1x1()
-    
+    testGetCellsGetsAllCells()
+    testGetReachableCellsGetsNothingWhenAllWallsClosed()
+    testGetReachableCellsReturnsHorizontalNeighbours()
+    testGetReachableCellsReturnsVerticalNeighbours()
+    testGetReachableSymmetry()
+
     print("NO ERRORS")
 
 runAllTests()
