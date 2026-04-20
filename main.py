@@ -10,3 +10,6 @@ maze = DFSGenerator(maze, seed = 5)
 visualiser.visualise()
 mazeSolution = aStarSolver(maze)
 visualiser.visualise(mazeSolution)
+
+test = (maze.rows, maze.columns)
+print(test)
