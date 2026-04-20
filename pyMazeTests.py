@@ -9,6 +9,7 @@ def getCellCoordinates(cells):
     return {(cell.row, cell.column) for cell in cells}
 
 def testCellInit():
+    
     """
     Tests that the cell is constructed properly.
     """
@@ -55,8 +56,7 @@ def testCreateGrid():
 
 def testGetNeighboursTopLeft():
     """
-    Tests that the top left corners neighbours are (1,0) and (0,1) as any other coordinates wouldn't be neighbours, or would be neighbours 
-    outside the bounds of the maze.
+    Tests that when using the getNeighbours method on the top left corner of a maze
     """
     maze = Maze(3, 3)
     cell = maze.grid[0][0]
@@ -68,6 +68,8 @@ def testGetNeighboursTopLeft():
 
 def testGetNeighboursTopEdge():
     """
+    Tests the getNeighbours method on the top edge of the maze, this should return 3 neighbours as the neighbour above the cell is
+    out of bounds.
     """
     maze = Maze(3,3)
     cell = maze.grid[0][1]
@@ -79,6 +81,7 @@ def testGetNeighboursTopEdge():
 
 def testGetNeighboursMiddleCell():
     """
+    Tests
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
