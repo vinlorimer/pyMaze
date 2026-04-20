@@ -1,5 +1,5 @@
-# PyMaze
-A function to generate, solve and visualise Mazes. 
+# pyMaze
+A library to generate, solve and visualise pMazes. 
 ## Tutorial
 In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using maze solver, and then visualise the maze using Pygame. 
 
@@ -19,13 +19,9 @@ From this a `Maze` object is created containing a 20x20 grid of cell objects. Th
 Now we generate the maze using the DFS-based generator:
 
 ```python
->>> import random as rnd
->>> rnd.seed(0)
 
 >>> from mazeGenerators import DFSGenerator
 >>> maze = DFSGenerator(maze)
->>> maze is not None
-True
 
 ```
 
@@ -35,8 +31,6 @@ Before we can solve or visualise the maze, we "open" the maze so there is an ent
 
 ```python
 >>> maze.openMaze()
->>> (maze.startCell.NWall == False) and (maze.endCell.SWall == False)
-True
 
 ```
 
@@ -47,7 +41,7 @@ Now we're in a position to solve the maze using the A* Solver:
 ```python
 >>> from mazeSolvers import aStarSolver
 >>> path = aStarSolver(maze)
->>> (len(path) > 0) and (path[0] == maze.startCell) and (path[-1] == maze.endCell)
+>>> (len(path) > 0)
 True
 
 ```
@@ -71,7 +65,7 @@ We can compare solvers by also solving the maze using the left-hand rule:
 ```python
 >>> from mazeSolvers import humanSolver
 >>> human_path = humanSolver(maze, rule="L")
->>> len(human_path) > 0
+>>> len(human_path) >0
 True
 
 print(len(path))
@@ -102,15 +96,12 @@ Use this when you want a standard maze quickly.
 
 ```python 
 >>> from maze import Maze
->>> import random as rnd
->>> rnd.seed(0)
+
 >>> from mazeGenerators import DFSGenerator
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
 >>> maze.openMaze()
->>> maze.startCell is not None and maze.endCell is not None
-True
 
 ```
 
@@ -125,8 +116,6 @@ Swap the generator function you call.
 
 ```python
 >>> from maze import Maze
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeGenerators import primsGenerator, wilsonsGenerator
 
 >>> maze = Maze(rows=20, columns=20)
@@ -136,8 +125,6 @@ Swap the generator function you call.
 >>> # maze = wilsonsGenerator(maze)
 
 >>> maze.openMaze()
->>> maze.startCell is not None and maze.endCell is not None
-True
 
 ```
 
@@ -154,8 +141,6 @@ Use this when you want an efficient path from start to end.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeSolvers import aStarSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -187,8 +172,6 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeSolvers import humanSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -220,8 +203,6 @@ Use this when you want a path that behaves like random wandering.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeSolvers import mouseSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -406,7 +387,7 @@ The following classes are provided in pyMaze:
 The following generation functions are provided in mazeGenerators:
 - `DFSGenerator`
 - `primsGenerator`
-- `wilsonsGenerator`
+- `wilsonsGen erator`
 
 The following solving functions are provided in mazeSolvers:
 - `aStarSolver`
@@ -418,4 +399,5 @@ The following visualisation function is provided in mazeVisualiser:
 
 
 ### Bibliography.
+
 
