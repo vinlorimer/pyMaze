@@ -7,10 +7,16 @@ We start by importing Maze from maze and creating a 20x20 maze.
 
 ```python
 >>> from maze import Maze
+<<<<<<< HEAD
 >>> maze = Maze(20, 20)
 >>> (maze.rows, maze.columns)
 (20, 20)
 
+=======
+>>> maze = Maze(rows=20, columns=20)
+>>> (maze.rows, maze.columns)
+(20, 20)
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 
@@ -26,7 +32,10 @@ Now we generate the maze using the DFS-based generator:
 >>> maze = DFSGenerator(maze)
 >>> maze is not None
 True
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 The generator will modify the maze by removing walls between cells, now the maze becomes fully connected (there now exists a route through the maze), then the function returns the generated maze. 
@@ -37,7 +46,10 @@ Before we can solve or visualise the maze, we "open" the maze so there is an ent
 >>> maze.openMaze()
 >>> (maze.startCell.NWall == False) and (maze.endCell.SWall == False)
 True
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 The start cell's north wall is removed (entrance) and the end cell's south wall is removed (exit).
@@ -49,7 +61,10 @@ Now we're in a position to solve the maze using the A* Solver:
 >>> path = aStarSolver(maze)
 >>> (len(path) > 0) and (path[0] == maze.startCell) and (path[-1] == maze.endCell)
 True
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path (path[0]) is the start cell and the last element (path[-1]) is the end cell.
@@ -59,8 +74,12 @@ The length of the path can be checked:
 ```python
 >>> len(path) > 0
 True
+<<<<<<< HEAD
 
 print(len(path))
+=======
+>>> print(len(path))  # doctest: +SKIP
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 
@@ -73,8 +92,12 @@ We can compare solvers by also solving the maze using the left-hand rule:
 >>> human_path = humanSolver(maze, rule="L")
 >>> len(human_path) > 0
 True
+<<<<<<< HEAD
 
 print(len(path))
+=======
+>>> print(len(path))  # doctest: +SKIP
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 The left hand rule will usually produce a valid route, but it may be longer than the A* route. 
@@ -111,7 +134,10 @@ Use this when you want a standard maze quickly.
 >>> maze.openMaze()
 >>> maze.startCell is not None and maze.endCell is not None
 True
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 The maze is generated (walls removed between many cells) and the entrance and exit are oepn (start top-left, end bottom-right).
@@ -138,7 +164,10 @@ Swap the generator function you call.
 >>> maze.openMaze()
 >>> maze.startCell is not None and maze.endCell is not None
 True
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 You will get a maze of the same size but with a different structure.
@@ -165,9 +194,13 @@ Use this when you want an efficient path from start to end.
 >>> path = aStarSolver(maze)
 >>> len(path) > 0
 True
+<<<<<<< HEAD
 
 print(len(path))
 
+=======
+>>> print(len(path))  # doctest: +SKIP
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 This will give:
@@ -201,9 +234,13 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 True
 >>> len(right_path) > 0
 True
+<<<<<<< HEAD
 
 print(len(left_path), len(right_path))
 
+=======
+>>> print(len(left_path), len(right_path))  # doctest: +SKIP
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 A valid path is returned in most cases, but the human-rule path may be longer than A* path.
@@ -231,9 +268,13 @@ Use this when you want a path that behaves like random wandering.
 >>> mouse_path = mouseSolver(maze, maxSteps=10000)
 >>> len(mouse_path) > 0
 True
+<<<<<<< HEAD
 
 print(len(mouse_path))
 
+=======
+>>> print(len(mouse_path))  # doctest: +SKIP
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 This will return a list of visited cells (the mouse's journey), if it fails to reach the end within `maxSteps`, the the path will stop at that limit. 
@@ -275,6 +316,7 @@ True
 True
 >>> len(mouse_path) > 0
 True
+<<<<<<< HEAD
 
 print("A* steps:", len(a_star_path))
 
@@ -282,6 +324,11 @@ print("Left-hand steps:", len(left_hand_path))
 
 print("Mouse steps:", len(mouse_path))
 
+=======
+>>> print("A* steps:", len(a_star_path))  # doctest: +SKIP
+>>> print("Left-hand steps:", len(left_hand_path))  # doctest: +SKIP
+>>> print("Mouse steps:", len(mouse_path))  # doctest: +SKIP
+>>>>>>> 7b341ad70ee099798a1e7318520fbaed11bdf013
 ```
 
 For each route a positive integer will be returned. A* should usually produce the shortest route (fewest steps). Human and mouse solvers will typically take more steps.
