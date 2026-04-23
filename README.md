@@ -76,13 +76,22 @@ The left hand rule will usually produce a valid route, but it may be longer than
 Finally, we can visualise the generated maze. This will open a Pygame window and draw the maze walls:
 
 ```python
-from mazeVisualiser import visualiseMaze
-visualiseMaze(maze)
+from mazeVisualisation import mazeVisualiser
+vis = mazeVisualiser(maze)
+vis
 
 ```
 
-In return a Pygame window opens showing the maze structure.
+A visualiser object is created and is ready to draw the maze.
 
+From here we can display the maze, the solution path and the path length.
+
+  
+```python
+vis.visualise(path)
+
+```
+A Pygame window will be opened showing the maze. The start cell is green and the end cell is red. The solution path is blue and the path length is displayed.
 
 ## How to guides
 ### How to generate a maze with DFS
@@ -225,16 +234,28 @@ Use this when you want to view the maze layout in a window.
 **Steps:**
 
 1. Generate a maze.
-2. Call `visualiseMaze(maze)`.
+2. Call `mazeVisualiser(maze)`.
 
 ```python
-from mazeVisualisers import visualiseMaze
-
-visualiseMaze(maze)
+from mazeVisualisation import mazeVisualiser
+vis = mazeVisualiser(maze)
+vis.visualise()
 
 ```
 
-This will open a Pygame window, where the maze walls are drawn. 
+A widow opens showing maze walls, start cell (green), and end cell (red), but no path is drawn.
+
+#### How to visualise a maze with a solved path.
+
+When you want to show the route produced by a solver use the following.
+
+```python
+from mazeVisualisation import mazeVisualiser
+vis = mazeVisualiser(maze)
+vis.visualise(path)
+
+```
+The solver path presented is coloured blue and the window displays the solution length.
 
 ### How to compare solvers on the same maze.
 Use this when you want to compare "efficiency" of different solvers using a simple metric like path length.
@@ -374,9 +395,20 @@ From a modelling viewpoint, the mouse solver is useful beacuse it represents a "
 Maze diffciulty is subjective, so pyMaze treats it as something we define using measureable features like the the shortest path length. We compare lengths of routes as typically a maze with a longer route often feels harder.
 
 ### Maze visualisation. 
-pyMaze visualises the maze by drawing cell's walls (north/ east/ south/ west) on a grid. Conceptually, visualisation is a seperate layer from the maze mathematics as vsiualisation dispalys the structure for user interpretation but generation and solving operate on the abstract structure.
+The maze visualiser is responsible for turning the maze data structure into something the user can see without changing the maze. It will read:
+- each cell's position (row, column)
+- each cell's wall flags (NWall, EWall, SWall, WWall)
+- and optionally a solver path (a list of cells)
 
-Keeping visualisation seperate improves modularity: the maze can be generated and solved without requiring a graphical window while still supporting a visual display when required. 
+The visualiser draws in layers:
+1. Background.
+2. Path Cells.
+3. Start cell (green) and end cell (red).
+4. Walls (black lines on top).
+
+This order ensures the wall lines remain visible even when cells are coloured.
+
+Visualisation is seperate from generating and solving for modularity as generating and solving can run without the need for graphics also, we can display the same maze using different renderers and the visualiser is optional for the user.
 
 ## Reference. 
 
