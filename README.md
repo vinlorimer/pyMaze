@@ -1,7 +1,7 @@
 # pyMaze
-A library to generate, solve and visualise pMazes. 
+A library to generate, solve and visualise pyMazes. 
 ## Tutorial
-In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using maze solver, and then visualise the maze using Pygame. 
+In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using a maze solver, and then visualise the maze using Pygame. 
 
 We start by importing Maze from maze and creating a 20x20 maze. 
 
@@ -16,7 +16,7 @@ We start by importing Maze from maze and creating a 20x20 maze.
 
 From this a `Maze` object is created containing a 20x20 grid of cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
-Now we generate the maze using the DFS-based generator, also to repeat using the same maze we use random:
+Now we generate the maze using the DFS-based generator, also to have the ability to repeat using the same maze we use random:
 
 ```python
 
@@ -48,7 +48,7 @@ True
 
 ```
 
-The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path (path[0]) is the start cell and the last element (path[-1]) is the end cell.
+The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path `(path[0])` is the start cell and the last element `(path[-1])` is the end cell.
 
 The length of the path can be checked:
 
@@ -116,7 +116,7 @@ Use this when you want a standard maze quickly.
 
 ```
 
-The maze is generated (walls removed between many cells) and the entrance and exit are oepn (start top-left, end bottom-right).
+The maze is generated (walls removed between many cells) and the entrance and exit are open (start: top-left, end: bottom-right).
 
 ### How to generate a maze with a different algorithm (Prim/ Wilson)
 Use this when you want a different "style" of maze without changing anything else.
@@ -202,7 +202,7 @@ print(len(left_path), len(right_path))
 
 A valid path is returned in most cases, but the human-rule path may be longer than A* path.
 
-### How to run a random "mouse" solver (for exploration).
+### How to run a random "mouse" solver.
 Use this when you want a path that behaves like random wandering. 
 
 **Steps:**
@@ -247,7 +247,7 @@ vis.visualise()
 
 A widow opens showing maze walls, start cell (green), and end cell (red), but no path is drawn.
 
-#### How to visualise a maze with a solved path.
+### How to visualise a maze with a solved path.
 
 When you want to show the route produced by a solver use the following.
 
@@ -304,7 +304,7 @@ Solving the maze then becomes a graph problem: find a route from the start cell 
 If the maze has $R$ rows and $C$ columnns, then the total number of cells is
 $V = RC$.
 
-Two cells are neighbours if they share a side (north, south, east, west). A cell has at most 4 neighbours (less at boundaries).
+Two cells are neighbours if they share a side (north, south, east, west). A cell has at most 4 neighbours (less than 4 at boundaries).
 
 ### Perfect mazes.
 Many classic maze generators aim to produce a perfect maze, meaning:
