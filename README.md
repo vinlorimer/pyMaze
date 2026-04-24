@@ -16,10 +16,12 @@ We start by importing Maze from maze and creating a 20x20 maze.
 
 From this a `Maze` object is created containing a 20x20 grid of cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
-Now we generate the maze using the DFS-based generator:
+Now we generate the maze using the DFS-based generator, also to repeat using the same maze we use random:
 
 ```python
 
+>>> import random as rnd
+>>> rnd.seed(0)
 >>> from mazeGenerators import DFSGenerator
 >>> maze = DFSGenerator(maze)
 
@@ -416,6 +418,7 @@ Visualisation is seperate from generating and solving for modularity as generati
 The following classes are provided in pyMaze:
 - `Cell`
 - `Maze`
+
 The following generation functions are provided in mazeGenerators:
 - `DFSGenerator`
 - `primsGenerator`
@@ -427,9 +430,35 @@ The following solving functions are provided in mazeSolvers:
 - `mouseSolver`
 
 The following visualisation function is provided in mazeVisualiser:
-- `visualiseMaze`
+- `mazeVisualiser`
 
+The following are used in Maze internally by generators and solvers:
+- `createGrid`
+- `getNeighbours`
+- `getUnvisited`
+- `removeWall`
+- `openMaze`
+- `getcells`
+- `getReachableCells`
+
+### Testing the software
+To test the code:
+
+```python
+$ python testpyMaze.py
+```
+
+To test the documentation:
+
+```python
+$ python -m doctest README.md
+```
 
 ### Bibliography.
 
+The following are sites and wikipedia pages which give an insightive overview of maze generation algorithms, maze solving algorithms and graph theory.
 
+- [Graph theory](https://en.wikipedia.org/wiki/Graph_theory)
+- [Maze generation algorithm](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
+- [Maze-solving algorithm](https://en.wikipedia.org/wiki/Maze-solving_algorithm)
+- [Maze Generation Algorithms - An Exploration](https://professor-l.github.io/mazes/)
