@@ -81,7 +81,7 @@ def testGetNeighboursTopEdge():
 
 def testGetNeighboursMiddleCell():
     """
-    Tests
+    Tests that getNeighbours returns all four neighbours around a middle cell as no cells around the cell should be out of bounds.
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
@@ -93,6 +93,8 @@ def testGetNeighboursMiddleCell():
 
 def testGetNeighboursBottomRight():
     """
+    Tests that the getNegihbours returns only two neighbours when checking the bottom right cell of a maze as the other two will be 
+    out of bounds.
     """
     maze = Maze(3,3)
     cell = maze.grid[2][2]
@@ -104,6 +106,7 @@ def testGetNeighboursBottomRight():
 
 def testGetUnvisitedGetsAllNeighboursWhenUnvisited():
     """
+    Tests that the getUnvisited method gets all cells around a specified cell that have the attribute visited as false.
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
@@ -115,6 +118,8 @@ def testGetUnvisitedGetsAllNeighboursWhenUnvisited():
 
 def testGetUnvisitedExcludesVisitedNeigbhours():
     """
+    Tests the getUnvisited method when some of the cells around a specified cell have been visited, and makes sure that it excludes
+    them.
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
@@ -128,6 +133,7 @@ def testGetUnvisitedExcludesVisitedNeigbhours():
 
 def testGetUnvisitedGetsNoVisitedCells():
     """
+    Tests that when all the cells around a specified cell are visited that it returns an empty list as they are all visited.
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
@@ -137,21 +143,9 @@ def testGetUnvisitedGetsNoVisitedCells():
 
     assert unvisitedCells == [], f"expected empty list, got {unvisitedCells}"
 
-def testRemoveWallOpensSouthAndNorthWalls():
-    """
-    """
-    maze = Maze(2,1)
-    topCell = maze.grid[0][0]
-    bottomCell = maze.grid[1][0]
-    maze.removeWall(topCell, bottomCell)
-
-    assert topCell.SWall is False, "expected swall to be false"
-    assert topCell.NWall is True, "expected nwall to be true"
-    assert bottomCell.NWall is False, "expected nwall to be false"
-    assert bottomCell.SWall is True, "expected swall to be true"
-
 def testRemoveWallOpensNorthAndSouthWalls():
     """
+    Tests when removing north and south walls that it actually does remove those walls.
     """
     maze = Maze(2,1)
     topCell = maze.grid[0][0]
@@ -163,8 +157,24 @@ def testRemoveWallOpensNorthAndSouthWalls():
     assert bottomCell.NWall is False, "expected nwall to be false"
     assert bottomCell.SWall is True, "expected swall to be true"
 
+
+def testRemoveWallOpensSouthAndNorthWalls():
+    """
+    Tests that when removing the south and north wall it actually does that and not something else 
+    """
+    maze = Maze(2,1)
+    topCell = maze.grid[0][0]
+    bottomCell = maze.grid[1][0]
+    maze.removeWall(topCell, bottomCell)
+
+    assert topCell.SWall is False, "expected swall to be false"
+    assert topCell.NWall is True, "expected nwall to be true"
+    assert bottomCell.NWall is False, "expected nwall to be false"
+    assert bottomCell.SWall is True, "expected swall to be true"
+
 def testRemoveWallOpensEastAndWestWalls():
     """
+    Tests when removing the east and west walls that it does that rather than something else
     """
     maze = Maze(1,2)
     leftCell = maze.grid[0][0]
@@ -178,6 +188,7 @@ def testRemoveWallOpensEastAndWestWalls():
 
 def testRemoveWallOpensWestAndEastWalls():
     """
+    Tests when removingthe west and east wall that it does that rather than something else.
     """
     maze = Maze(1,2)
     leftCell = maze.grid[0][0]
@@ -191,6 +202,7 @@ def testRemoveWallOpensWestAndEastWalls():
 
 def testOpenMaze():
     """
+    Tests that when using the openMaze method it actually does open the correct walls of the maze.
     """
     maze = Maze(3,3)
     maze.openMaze()
@@ -200,6 +212,7 @@ def testOpenMaze():
 
 def testOpenMazeOn1x1():
     """
+
     """
     maze = Maze(1,1)
     maze.openMaze()
@@ -272,8 +285,296 @@ def testGetReachableSymmetry():
     assert cellTwo in reachableFromCellOne, "expected celltwo to be reachable"
     assert cellOne in reachableFromCellTwo, "expected cellone to be reachable"
 
+def getMazeSignature(maze):
+    """
+    A helper function that is used to compare if two generated mazes have the same signature
+
+    Parameters
+    ---
+    maze: Maze | the maze to get a signature for 
+
+    Returns
+    ---
+    A tuple with the mazes signature
+    """
+    signature = []
+
+    for cell in maze.getCells():
+        signature.append((cell.row, cell.column, cell.NWall, cell.EWall, cell.SWall, cell.WWall))
+    
+    return tuple(signature)
+    
+def countMazePassages(maze):
+    """
+    A helper function that is used to count the number of open passages in a given maze. The reason for using only checking south
+    and east walls is so that it doesn't count duplicate passages.
+
+    Parameters
+    ---
+    maze: Maze | the maze which passages are to be counted
+
+    Returns
+    ---
+    An int that is the number of passages in the given maze
+    """
+
+    passages = 0 
+
+    for cell in maze.getCells():
+        if cell.column < maze.columns - 1 and cell.EWall is False:
+            passages += 1
+        
+        if cell.row < maze.rows - 1 and cell.SWall is False:
+            passages += 1
+
+    return passages
+
+def getConnectedCellsFromStartCell(maze):
+    """
+    Another helper function that gets all the cells reachable from the start cell.
+
+    Parameters
+    ---
+    maze: Maze | the maze to check
+
+    Returns
+    ---
+    visited: set | A set of all the cells visitable
+    """
+
+    visited = set()
+    stack = [maze.startCell]
+
+    while stack:
+        currentCell = stack.pop()
+
+        if currentCell not in visited:
+            visited.add(currentCell)
+
+            for neighbour in maze.getReachableCells(currentCell):
+                if neighbour not in visited:
+                    stack.append(neighbour)
+    
+    return visited
+
+def testAllCellsVisited(generator, rows=5, columns=5, seed=10):
+    """
+    A function to test that all the cells 
+    """
+    maze = Maze(rows, columns)
+    maze = generator(maze, seed)
+
+    for cell in maze.getCells():
+        assert cell.visited is True, f"Expected cell {cell.row}, {cell.column} to be visited"
+
+def testGeneratedMazeIsConnected(generator, rows=5, columns=5, seed=10):
+    """
+    """
+    maze = Maze(rows, columns)
+    maze = generator(maze, seed)
+
+    connectedCells = getConnectedCellsFromStartCell(maze)
+    expectedConnectedCells = rows*columns
+
+    assert len(connectedCells) == expectedConnectedCells, f"expected {expectedConnectedCells}, got {len(connectedCells)}"
+
+def testGeneratedMazeIsPerfect(generator, rows=5, columns=5, seed=10):
+    """
+    """
+    maze = Maze(rows, columns)
+    maze = generator(maze, seed)
+
+    totalCells = rows*columns
+    passages = countMazePassages(maze)
+
+    assert totalCells-1 == passages, f"expected there to be {totalCells-1} passages, instead got {passages}"
+
+def testSameSeedGeneration(generator, rows=5, columns=5, seed=42):
+    """
+    """
+    mazeOne = Maze(rows, columns)
+    mazeTwo = Maze(rows, columns)
+
+    mazeOne = generator(mazeOne, seed)
+    mazeTwo = generator(mazeTwo, seed)
+
+    mazeOneSignature = getMazeSignature(mazeOne)
+    mazeTwoSignature = getMazeSignature(mazeTwo)
+
+    assert mazeOneSignature == mazeTwoSignature, "expected the same seed to generate the same maze"
 
 
+def testGeneratedMazeIsAMazeObject(generator, rows=5, columns=5, seed=10):
+    """
+    """
+    maze = Maze(rows, columns)
+    generatedMaze = generator(maze, seed)
+
+    assert generatedMaze is maze, "expected the generated maze to still be a maze object"
+
+def testGeneratorsWorkOn1x1(generator, seed=10):
+    """
+    """
+    maze = Maze(1,1)
+    maze = generator(maze, seed)
+    
+    assert maze.startCell == maze.endCell, "expected the start and end cell to be the same cell."
+    assert maze.startCell.visited is True, "expected the start cell to have been visited"
+    assert countMazePassages(maze) == 0, f"expected there to be 0 passages in a 1x1 maze, instead got {countMazePassages(maze)}"
+
+def testGeneratorsWorkOnNonSquareMaze(generator, seed=10):
+    """
+    """
+    rows = 6
+    columns = 7
+    maze = Maze(rows, columns)
+    maze = generator(maze, seed)
+
+    connectedCells = getConnectedCellsFromStartCell(maze)
+    expectedConnectedCells = rows * columns
+
+    assert len(connectedCells) == expectedConnectedCells, f"expected {expectedConnectedCells} connected cells instead got {len(connectedCells)}"
+
+    for cell in maze.getCells():
+        assert cell.visited is True, f"expected {cell.row}, {cell.column} to have been visited."
+
+def testDFSGeneratorReturnsMaze():
+    """
+    Tests that DFSGenerator returns the same maze object.
+    """
+    testGeneratedMazeIsAMazeObject(DFSGenerator)
+
+def testDFSGeneratorVisitsAllCells():
+    """
+    Tests that DFSGenerator visits every cell.
+    """
+    testAllCellsVisited(DFSGenerator)
+
+def testDFSGeneratorCreatesConnectedMaze():
+    """
+    Tests that DFSGenerator creates a fully connected maze.
+    """
+    testGeneratedMazeIsConnected(DFSGenerator)
+
+def testDFSGeneratorCreatesPerfectMaze():
+    """
+    Tests that DFSGenerator creates a perfect maze.
+    """
+    testGeneratedMazeIsPerfect(DFSGenerator)
+
+def testDFSGeneratorSameSeedSameMaze():
+    """
+    Tests that DFSGenerator is reproducible with the same seed.
+    """
+    testSameSeedGeneration(DFSGenerator)
+
+def testDFSGeneratorWorksOn1x1():
+    """
+    Tests that DFSGenerator works on a 1x1 maze.
+    """
+    testGeneratorsWorkOn1x1(DFSGenerator)
+
+def testDFSGeneratorWorksOnNonSquareMaze():
+    """
+    Tests that DFSGenerator works on a non-square maze.
+    """
+    testGeneratorsWorkOnNonSquareMaze(DFSGenerator)
+
+def testPrimsGeneratorReturnsMaze():
+    """
+    Tests that primsGenerator returns the same maze object.
+    """
+    testGeneratedMazeIsAMazeObject(primsGenerator)
+
+
+def testPrimsGeneratorVisitsAllCells():
+    """
+    Tests that primsGenerator visits every cell.
+    """
+    testAllCellsVisited(primsGenerator)
+
+
+def testPrimsGeneratorCreatesConnectedMaze():
+    """
+    Tests that primsGenerator creates a fully connected maze.
+    """
+    testGeneratedMazeIsConnected(primsGenerator)
+
+
+def testPrimsGeneratorCreatesPerfectMaze():
+    """
+    Tests that primsGenerator creates a perfect maze.
+    """
+    testGeneratedMazeIsPerfect(primsGenerator)
+
+
+def testPrimsGeneratorSameSeedSameMaze():
+    """
+    Tests that primsGenerator is reproducible with the same seed.
+    """
+    testSameSeedGeneration(primsGenerator)
+
+
+def testPrimsGeneratorWorksOn1x1():
+    """
+    Tests that primsGenerator works on a 1x1 maze.
+    """
+    testGeneratorsWorkOn1x1(primsGenerator)
+
+
+def testPrimsGeneratorWorksOnNonSquareMaze():
+    """
+    Tests that primsGenerator works on a non-square maze.
+    """
+    testGeneratorsWorkOnNonSquareMaze(primsGenerator)
+
+def testWilsonsGeneratorReturnsMaze():
+    """
+    Tests that wilsonsGenerator returns the same maze object.
+    """
+    testGeneratedMazeIsAMazeObject(wilsonsGenerator)
+
+
+def testWilsonsGeneratorVisitsAllCells():
+    """
+    Tests that wilsonsGenerator visits every cell.
+    """
+    testAllCellsVisited(wilsonsGenerator)
+
+
+def testWilsonsGeneratorCreatesConnectedMaze():
+    """
+    Tests that wilsonsGenerator creates a fully connected maze.
+    """
+    testGeneratedMazeIsConnected(wilsonsGenerator)
+
+
+def testWilsonsGeneratorCreatesPerfectMaze():
+    """
+    Tests that wilsonsGenerator creates a perfect maze.
+    """
+    testGeneratedMazeIsPerfect(wilsonsGenerator)
+
+
+def testWilsonsGeneratorSameSeedSameMaze():
+    """
+    Tests that wilsonsGenerator is reproducible with the same seed.
+    """
+    testSameSeedGeneration(wilsonsGenerator)
+
+
+def testWilsonsGeneratorWorksOn1x1():
+    """
+    Tests that wilsonsGenerator works on a 1x1 maze.
+    """
+    testGeneratorsWorkOn1x1(wilsonsGenerator)
+
+
+def testWilsonsGeneratorWorksOnNonSquareMaze():
+    """
+    Tests that wilsonsGenerator works on a non-square maze.
+    """
+    testGeneratorsWorkOnNonSquareMaze(wilsonsGenerator)
 
 def runAllTests():
     """
@@ -300,6 +601,28 @@ def runAllTests():
     testGetReachableCellsReturnsHorizontalNeighbours()
     testGetReachableCellsReturnsVerticalNeighbours()
     testGetReachableSymmetry()
+
+    testDFSGeneratorReturnsMaze()
+    testDFSGeneratorVisitsAllCells()
+    testDFSGeneratorCreatesConnectedMaze()
+    testDFSGeneratorCreatesPerfectMaze()
+    testDFSGeneratorSameSeedSameMaze()
+    testDFSGeneratorWorksOn1x1()
+    testDFSGeneratorWorksOnNonSquareMaze()
+    testPrimsGeneratorReturnsMaze()
+    testPrimsGeneratorVisitsAllCells()
+    testPrimsGeneratorCreatesConnectedMaze()
+    testPrimsGeneratorCreatesPerfectMaze()
+    testPrimsGeneratorSameSeedSameMaze()
+    testPrimsGeneratorWorksOn1x1()
+    testPrimsGeneratorWorksOnNonSquareMaze()
+    testWilsonsGeneratorReturnsMaze()
+    testWilsonsGeneratorVisitsAllCells()
+    testWilsonsGeneratorCreatesConnectedMaze()
+    testWilsonsGeneratorCreatesPerfectMaze()
+    testWilsonsGeneratorSameSeedSameMaze()
+    testWilsonsGeneratorWorksOn1x1()
+    testWilsonsGeneratorWorksOnNonSquareMaze()
 
     print("NO ERRORS")
 
