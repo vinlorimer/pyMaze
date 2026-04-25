@@ -3,13 +3,10 @@ from mazeGenerators import DFSGenerator, primsGenerator, wilsonsGenerator
 from mazeSolvers import mouseSolver, humanSolver, aStarSolver
 from mazeVisualisation import mazeVisualiser
 
-maze = Maze(50,50)
+maze = Maze(150,150)
 visualiser = mazeVisualiser(maze)
 visualiser.visualise()
-maze = DFSGenerator(maze, seed = 5)
+maze = wilsonsGenerator(maze, seed = 5)
 visualiser.visualise()
-mazeSolution = aStarSolver(maze)
+mazeSolution = humanSolver(maze, "l")
 visualiser.visualise(mazeSolution)
-
-test = (maze.rows, maze.columns)
-print(test)
