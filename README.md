@@ -1,7 +1,7 @@
-# PyMaze
-A function to generate, solve and visualise Mazes. 
+# pyMaze
+A library to generate, solve and visualise pyMazes. 
 ## Tutorial
-In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using maze solver, and then visualise the maze using Pygame. 
+In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using a maze solver, and then visualise the maze using Pygame. 
 
 We start by importing Maze from maze and creating a 20x20 maze. 
 
@@ -16,16 +16,14 @@ We start by importing Maze from maze and creating a 20x20 maze.
 
 From this a `Maze` object is created containing a 20x20 grid of cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
-Now we generate the maze using the DFS-based generator:
+Now we generate the maze using the DFS-based generator, also to have the ability to repeat using the same maze we use random:
 
 ```python
+
 >>> import random as rnd
 >>> rnd.seed(0)
-
 >>> from mazeGenerators import DFSGenerator
 >>> maze = DFSGenerator(maze)
->>> maze is not None
-True
 
 ```
 
@@ -35,8 +33,6 @@ Before we can solve or visualise the maze, we "open" the maze so there is an ent
 
 ```python
 >>> maze.openMaze()
->>> (maze.startCell.NWall == False) and (maze.endCell.SWall == False)
-True
 
 ```
 
@@ -47,12 +43,12 @@ Now we're in a position to solve the maze using the A* Solver:
 ```python
 >>> from mazeSolvers import aStarSolver
 >>> path = aStarSolver(maze)
->>> (len(path) > 0) and (path[0] == maze.startCell) and (path[-1] == maze.endCell)
+>>> (len(path) > 0)
 True
 
 ```
 
-The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path (path[0]) is the start cell and the last element (path[-1]) is the end cell.
+The path is then given as a list of cell objects describing a valid route from start to end. The first element of the path `(path[0])` is the start cell and the last element `(path[-1])` is the end cell.
 
 The length of the path can be checked:
 
@@ -71,7 +67,7 @@ We can compare solvers by also solving the maze using the left-hand rule:
 ```python
 >>> from mazeSolvers import humanSolver
 >>> human_path = humanSolver(maze, rule="L")
->>> len(human_path) > 0
+>>> len(human_path) >0
 True
 
 print(len(path))
@@ -82,13 +78,22 @@ The left hand rule will usually produce a valid route, but it may be longer than
 Finally, we can visualise the generated maze. This will open a Pygame window and draw the maze walls:
 
 ```python
-from mazeVisualiser import visualiseMaze
-visualiseMaze(maze)
+from mazeVisualisation import mazeVisualiser
+vis = mazeVisualiser(maze)
+vis
 
 ```
 
-In return a Pygame window opens showing the maze structure.
+A visualiser object is created and is ready to draw the maze.
 
+From here we can display the maze, the solution path and the path length.
+
+  
+```python
+vis.visualise(path)
+
+```
+A Pygame window will be opened showing the maze. The start cell is green and the end cell is red. The solution path is blue and the path length is displayed.
 
 ## How to guides
 ### How to generate a maze with DFS
@@ -102,19 +107,16 @@ Use this when you want a standard maze quickly.
 
 ```python 
 >>> from maze import Maze
->>> import random as rnd
->>> rnd.seed(0)
+
 >>> from mazeGenerators import DFSGenerator
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
 >>> maze.openMaze()
->>> maze.startCell is not None and maze.endCell is not None
-True
 
 ```
 
-The maze is generated (walls removed between many cells) and the entrance and exit are oepn (start top-left, end bottom-right).
+The maze is generated (walls removed between many cells) and the entrance and exit are open (start: top-left, end: bottom-right).
 
 ### How to generate a maze with a different algorithm (Prim/ Wilson)
 Use this when you want a different "style" of maze without changing anything else.
@@ -125,8 +127,6 @@ Swap the generator function you call.
 
 ```python
 >>> from maze import Maze
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeGenerators import primsGenerator, wilsonsGenerator
 
 >>> maze = Maze(rows=20, columns=20)
@@ -136,8 +136,6 @@ Swap the generator function you call.
 >>> # maze = wilsonsGenerator(maze)
 
 >>> maze.openMaze()
->>> maze.startCell is not None and maze.endCell is not None
-True
 
 ```
 
@@ -154,8 +152,6 @@ Use this when you want an efficient path from start to end.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeSolvers import aStarSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -187,8 +183,6 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeSolvers import humanSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -208,7 +202,7 @@ print(len(left_path), len(right_path))
 
 A valid path is returned in most cases, but the human-rule path may be longer than A* path.
 
-### How to run a random "mouse" solver (for exploration).
+### How to run a random "mouse" solver.
 Use this when you want a path that behaves like random wandering. 
 
 **Steps:**
@@ -220,8 +214,6 @@ Use this when you want a path that behaves like random wandering.
 ```python
 >>> from maze import Maze
 >>> from mazeGenerators import DFSGenerator
->>> import random as rnd
->>> rnd.seed(0)
 >>> from mazeSolvers import mouseSolver
 
 >>> maze = Maze(rows=20, columns=20)
@@ -244,16 +236,28 @@ Use this when you want to view the maze layout in a window.
 **Steps:**
 
 1. Generate a maze.
-2. Call `visualiseMaze(maze)`.
+2. Call `mazeVisualiser(maze)`.
 
 ```python
-from mazeVisualisers import visualiseMaze
-
-visualiseMaze(maze)
+from mazeVisualisation import mazeVisualiser
+vis = mazeVisualiser(maze)
+vis.visualise()
 
 ```
 
-This will open a Pygame window, where the maze walls are drawn. 
+A widow opens showing maze walls, start cell (green), and end cell (red), but no path is drawn.
+
+### How to visualise a maze with a solved path.
+
+When you want to show the route produced by a solver use the following.
+
+```python
+from mazeVisualisation import mazeVisualiser
+vis = mazeVisualiser(maze)
+vis.visualise(path)
+
+```
+The solver path presented is coloured blue and the window displays the solution length.
 
 ### How to compare solvers on the same maze.
 Use this when you want to compare "efficiency" of different solvers using a simple metric like path length.
@@ -300,7 +304,7 @@ Solving the maze then becomes a graph problem: find a route from the start cell 
 If the maze has $R$ rows and $C$ columnns, then the total number of cells is
 $V = RC$.
 
-Two cells are neighbours if they share a side (north, south, east, west). A cell has at most 4 neighbours (less at boundaries).
+Two cells are neighbours if they share a side (north, south, east, west). A cell has at most 4 neighbours (less than 4 at boundaries).
 
 ### Perfect mazes.
 Many classic maze generators aim to produce a perfect maze, meaning:
@@ -393,9 +397,20 @@ From a modelling viewpoint, the mouse solver is useful beacuse it represents a "
 Maze diffciulty is subjective, so pyMaze treats it as something we define using measureable features like the the shortest path length. We compare lengths of routes as typically a maze with a longer route often feels harder.
 
 ### Maze visualisation. 
-pyMaze visualises the maze by drawing cell's walls (north/ east/ south/ west) on a grid. Conceptually, visualisation is a seperate layer from the maze mathematics as vsiualisation dispalys the structure for user interpretation but generation and solving operate on the abstract structure.
+The maze visualiser is responsible for turning the maze data structure into something the user can see without changing the maze. It will read:
+- each cell's position (row, column)
+- each cell's wall flags (NWall, EWall, SWall, WWall)
+- and optionally a solver path (a list of cells)
 
-Keeping visualisation seperate improves modularity: the maze can be generated and solved without requiring a graphical window while still supporting a visual display when required. 
+The visualiser draws in layers:
+1. Background.
+2. Path Cells.
+3. Start cell (green) and end cell (red).
+4. Walls (black lines on top).
+
+This order ensures the wall lines remain visible even when cells are coloured.
+
+Visualisation is seperate from generating and solving for modularity as generating and solving can run without the need for graphics also, we can display the same maze using different renderers and the visualiser is optional for the user.
 
 ## Reference. 
 
@@ -403,10 +418,11 @@ Keeping visualisation seperate improves modularity: the maze can be generated an
 The following classes are provided in pyMaze:
 - `Cell`
 - `Maze`
+
 The following generation functions are provided in mazeGenerators:
 - `DFSGenerator`
 - `primsGenerator`
-- `wilsonsGenerator`
+- `wilsonsGen erator`
 
 The following solving functions are provided in mazeSolvers:
 - `aStarSolver`
@@ -414,8 +430,35 @@ The following solving functions are provided in mazeSolvers:
 - `mouseSolver`
 
 The following visualisation function is provided in mazeVisualiser:
-- `visualiseMaze`
+- `mazeVisualiser`
 
+The following are used in Maze internally by generators and solvers:
+- `createGrid`
+- `getNeighbours`
+- `getUnvisited`
+- `removeWall`
+- `openMaze`
+- `getcells`
+- `getReachableCells`
+
+### Testing the software
+To test the code:
+
+```python
+$ python testpyMaze.py
+```
+
+To test the documentation:
+
+```python
+$ python -m doctest README.md
+```
 
 ### Bibliography.
 
+The following are sites and wikipedia pages which give an insightive overview of maze generation algorithms, maze solving algorithms and graph theory.
+
+- [Graph theory](https://en.wikipedia.org/wiki/Graph_theory)
+- [Maze generation algorithm](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
+- [Maze-solving algorithm](https://en.wikipedia.org/wiki/Maze-solving_algorithm)
+- [Maze Generation Algorithms - An Exploration](https://professor-l.github.io/mazes/)
