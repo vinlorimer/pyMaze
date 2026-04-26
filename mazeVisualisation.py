@@ -125,7 +125,7 @@ class mazeVisualiser:
         """
         self.drawMaze(path)
         if path is not None:    
-            pathLength = len(path) - 1
+            pathLength = len(path)
             text = self.font.render(f"Path length: {pathLength}", True, (0, 0, 0))
             self.screen.blit(text, (0, 0))
             pygame.display.flip()
