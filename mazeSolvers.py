@@ -126,6 +126,7 @@ def aStarSolver(maze: Maze):
     startCell = maze.startCell
     endCell = maze.endCell
 
+    path = []
     openSet = [startCell]
     closedSet = set()
     gScore = {}
