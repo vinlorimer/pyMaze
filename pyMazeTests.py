@@ -438,145 +438,189 @@ def testGeneratorsWorkOnNonSquareMaze(generator, seed=10):
     for cell in maze.getCells():
         assert cell.visited is True, f"expected {cell.row}, {cell.column} to have been visited."
 
-def testDFSGeneratorReturnsMaze():
+def getPathCoordinates(path):
     """
-    Tests that DFSGenerator returns the same maze object.
-    """
-    testGeneratedMazeIsAMazeObject(DFSGenerator)
+    Creates a list of all the cell coordinates that make up the solution path. good for debug
 
-def testDFSGeneratorVisitsAllCells():
+    Parameters
+    ---
+    path | the solution path being checked
     """
-    Tests that DFSGenerator visits every cell.
-    """
-    testAllCellsVisited(DFSGenerator)
+    pathCoordinates = []
+    for cell in path:
+        pathCoordinates.append((cell.row, cell.column))
 
-def testDFSGeneratorCreatesConnectedMaze():
-    """
-    Tests that DFSGenerator creates a fully connected maze.
-    """
-    testGeneratedMazeIsConnected(DFSGenerator)
+    return pathCoordinates
 
-def testDFSGeneratorCreatesPerfectMaze():
+def isPathValid(maze, path):
     """
-    Tests that DFSGenerator creates a perfect maze.
-    """
-    testGeneratedMazeIsPerfect(DFSGenerator)
+    Checks if the path is valid, i.e. it actually has elements in it, the starting element is the same as the start cell and finally
+    it checks each cell if the cell after it is actually reachable from the current cell in the path.
 
-def testDFSGeneratorSameSeedSameMaze():
+    Parameters
+    ---
+    maze: Maze | the maze the path is a solution to
+    path | the solution path to check if valid
     """
-    Tests that DFSGenerator is reproducible with the same seed.
-    """
-    testSameSeedGeneration(DFSGenerator)
+    if len(path) == 0:
+        print("path doesnt exist")
+        return False
+    
+    if path[0] != maze.startCell:
+        print("the first element isnt the start cell")
+        return False
+    
+    for i in range(len(path)-1):
+        currentCell = path[i]
+        nextCell = path[i+1]
 
-def testDFSGeneratorWorksOn1x1():
-    """
-    Tests that DFSGenerator works on a 1x1 maze.
-    """
-    testGeneratorsWorkOn1x1(DFSGenerator)
+        if nextCell not in maze.getReachableCells(currentCell):
+            print("cant reach the next cell from current cell")
+            return False
 
-def testDFSGeneratorWorksOnNonSquareMaze():
-    """
-    Tests that DFSGenerator works on a non-square maze.
-    """
-    testGeneratorsWorkOnNonSquareMaze(DFSGenerator)
+    return True
 
-def testPrimsGeneratorReturnsMaze():
+def horizontalCorridorMaze(length):
     """
-    Tests that primsGenerator returns the same maze object.
+    A function to create a 1 x length "maze" (just a corridor) to test that the solvers can actually move accross it
     """
-    testGeneratedMazeIsAMazeObject(primsGenerator)
+    maze = Maze(1, length)
 
+    for column in range(length-1):
+        maze.removeWall(maze.grid[0][column], maze.grid[0][column+1])
 
-def testPrimsGeneratorVisitsAllCells():
-    """
-    Tests that primsGenerator visits every cell.
-    """
-    testAllCellsVisited(primsGenerator)
+    return maze
 
+def verticalCorridorMaze(length):
+    """
+    """
+    maze = Maze(length, 1)
 
-def testPrimsGeneratorCreatesConnectedMaze():
-    """
-    Tests that primsGenerator creates a fully connected maze.
-    """
-    testGeneratedMazeIsConnected(primsGenerator)
+    for row in range(length-1):
+        maze.removeWall(maze.grid[row][0], maze.grid[row+1][0])
+    
+    return maze
 
+def getShortestPathPossible(maze):
+    """
+    A function to work out the shortest path between the starting cell and the end cell using a breadth-first search algorithm which
+    is perfect for this. 
 
-def testPrimsGeneratorCreatesPerfectMaze():
+    Parameters
+    ---
+    maze: Maze | the maze to get the shortest path for
     """
-    Tests that primsGenerator creates a perfect maze.
-    """
-    testGeneratedMazeIsPerfect(primsGenerator)
+    queue = [(maze.startCell, 1)]
+    visited = {maze.startCell}
 
+    while len(queue) > 0:
+        currentCell, currentLength = queue.pop(0)
 
-def testPrimsGeneratorSameSeedSameMaze():
-    """
-    Tests that primsGenerator is reproducible with the same seed.
-    """
-    testSameSeedGeneration(primsGenerator)
+        if currentCell == maze.endCell:
+            return currentLength
 
+        for neighbour in maze.getReachableCells(currentCell):
+            if neighbour not in visited:
+                visited.add(neighbour)
+                queue.append((neighbour, currentLength + 1))
 
-def testPrimsGeneratorWorksOn1x1():
+def testMouseSolverOn1x1():
     """
-    Tests that primsGenerator works on a 1x1 maze.
     """
-    testGeneratorsWorkOn1x1(primsGenerator)
+    maze = Maze(1,1)
+    path = mouseSolver(maze)
 
+    assert path == [maze.startCell], f"expected the path to be just start cell, instead got {getPathCoordinates(path)}"
 
-def testPrimsGeneratorWorksOnNonSquareMaze():
+def testMouseSolverOnCorridor():
     """
-    Tests that primsGenerator works on a non-square maze.
+    Test that it can move through a corridor, was originally max steps 10 but raised to 100 so essentially impossible to fail
     """
-    testGeneratorsWorkOnNonSquareMaze(primsGenerator)
+    maze = horizontalCorridorMaze(3)
+    path = mouseSolver(maze, 100)
+   
+    assert path[0] == maze.startCell, "expected first cell in path to be the start cell"
+    assert path[-1] == maze.endCell, "expected the final cell in path to be the end cell"
+    assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
 
-def testWilsonsGeneratorReturnsMaze():
+def testMouseSolversMaxSteps():
     """
-    Tests that wilsonsGenerator returns the same maze object.
     """
-    testGeneratedMazeIsAMazeObject(wilsonsGenerator)
+    maze = horizontalCorridorMaze(3)
+    path = mouseSolver(maze, 1)
 
+    assert len(path) == 2, f"expected path length 2, got {len(path)}"
+    assert path[-1] != maze.endCell, "expected solver not to have reached endCell yet"
+    assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
 
-def testWilsonsGeneratorVisitsAllCells():
+def testHumanSolverOn1x1():
     """
-    Tests that wilsonsGenerator visits every cell.
     """
-    testAllCellsVisited(wilsonsGenerator)
+    maze = Maze(1,1)
+    path = humanSolver(maze)
+ 
+    assert path == [maze.startCell], f"expected the path to be just start cell, instead got {getPathCoordinates(path)}"
 
+def testHumanSolverOnHorizontalCorridor(rule):
+    """
+    """
+    maze = horizontalCorridorMaze(5)
+    path = humanSolver(maze, rule)
+    expectedPathCoordinates = [(0,0),(0,1),(0,2),(0,3),(0,4)]
 
-def testWilsonsGeneratorCreatesConnectedMaze():
-    """
-    Tests that wilsonsGenerator creates a fully connected maze.
-    """
-    testGeneratedMazeIsConnected(wilsonsGenerator)
+    assert getPathCoordinates(path) == expectedPathCoordinates, f"expected {expectedPathCoordinates}, instead got {getPathCoordinates(path)}"
+    assert path[-1] == maze.endCell, "expected the final cell in path to be the end cell"
+    assert path[0] == maze.startCell, "expected the first cell in path to be the start cell"
+    assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
 
+def testHumanSolverOnVerticalCorridor(rule):
+    """
+    Testing this twice as it has a directional
+    """
+    maze = verticalCorridorMaze(5)
+    path = humanSolver(maze, rule)
+    expectedPathCoordinates = [(0,0),(1,0),(2,0),(3,0),(4,0)]
 
-def testWilsonsGeneratorCreatesPerfectMaze():
-    """
-    Tests that wilsonsGenerator creates a perfect maze.
-    """
-    testGeneratedMazeIsPerfect(wilsonsGenerator)
+    assert getPathCoordinates(path) == expectedPathCoordinates, f"expected {expectedPathCoordinates}, instead got {getPathCoordinates(path)}"
+    assert path[-1] == maze.endCell, "expected the final cell in path to be the end cell"
+    assert path[0] == maze.startCell, "expected the first cell in path to be the start cell"
+    assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
 
+def testAStarSolverOn1x1():
+    """
+    """
+    maze = Maze(1,1)
+    path = aStarSolver(maze)
 
-def testWilsonsGeneratorSameSeedSameMaze():
-    """
-    Tests that wilsonsGenerator is reproducible with the same seed.
-    """
-    testSameSeedGeneration(wilsonsGenerator)
+    assert path == [maze.startCell], f"expected the path to just be the start cell instead got {getPathCoordinates(path)}"
 
+def testAStarSolverOnCorridor():
+    """
+    """
+    maze = horizontalCorridorMaze(5)
+    path = aStarSolver(maze)
+    expectedPathCoordinates = [(0,0),(0,1),(0,2),(0,3),(0,4)]
+    
+    assert getPathCoordinates(path) == expectedPathCoordinates, f"expected {expectedPathCoordinates}, instead got {getPathCoordinates(path)}"
+    assert path[-1] == maze.endCell, "expected the final cell in path to be the end cell"
+    assert path[0] == maze.startCell, "expected the first cell in path to be the start cell"
+    assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
 
-def testWilsonsGeneratorWorksOn1x1():
+def testAStarSolverGetsTheShortestPath():
     """
-    Tests that wilsonsGenerator works on a 1x1 maze.
     """
-    testGeneratorsWorkOn1x1(wilsonsGenerator)
+    maze = Maze(5,5)
+    maze = DFSGenerator(maze)
+    path = aStarSolver(maze)
+    shortestPath = getShortestPathPossible(maze)
 
-
-def testWilsonsGeneratorWorksOnNonSquareMaze():
-    """
-    Tests that wilsonsGenerator works on a non-square maze.
-    """
-    testGeneratorsWorkOnNonSquareMaze(wilsonsGenerator)
+    assert path[-1] == maze.endCell, "expected the final cell in path to be the end cell"
+    assert path[0] == maze.startCell, "expected the first cell in path to be the start cell"
+    assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
+    assert len(path) == shortestPath
 
 def runAllTests():
+
     """
     The name.
     """
@@ -602,27 +646,39 @@ def runAllTests():
     testGetReachableCellsReturnsVerticalNeighbours()
     testGetReachableSymmetry()
 
-    testDFSGeneratorReturnsMaze()
-    testDFSGeneratorVisitsAllCells()
-    testDFSGeneratorCreatesConnectedMaze()
-    testDFSGeneratorCreatesPerfectMaze()
-    testDFSGeneratorSameSeedSameMaze()
-    testDFSGeneratorWorksOn1x1()
-    testDFSGeneratorWorksOnNonSquareMaze()
-    testPrimsGeneratorReturnsMaze()
-    testPrimsGeneratorVisitsAllCells()
-    testPrimsGeneratorCreatesConnectedMaze()
-    testPrimsGeneratorCreatesPerfectMaze()
-    testPrimsGeneratorSameSeedSameMaze()
-    testPrimsGeneratorWorksOn1x1()
-    testPrimsGeneratorWorksOnNonSquareMaze()
-    testWilsonsGeneratorReturnsMaze()
-    testWilsonsGeneratorVisitsAllCells()
-    testWilsonsGeneratorCreatesConnectedMaze()
-    testWilsonsGeneratorCreatesPerfectMaze()
-    testWilsonsGeneratorSameSeedSameMaze()
-    testWilsonsGeneratorWorksOn1x1()
-    testWilsonsGeneratorWorksOnNonSquareMaze()
+    testGeneratedMazeIsAMazeObject(DFSGenerator)
+    testAllCellsVisited(DFSGenerator)
+    testGeneratedMazeIsConnected(DFSGenerator)
+    testGeneratedMazeIsPerfect(DFSGenerator)
+    testSameSeedGeneration(DFSGenerator)
+    testGeneratorsWorkOn1x1(DFSGenerator)
+    testGeneratorsWorkOnNonSquareMaze(DFSGenerator)
+    testGeneratedMazeIsAMazeObject(primsGenerator)
+    testAllCellsVisited(primsGenerator)
+    testGeneratedMazeIsConnected(primsGenerator)
+    testGeneratedMazeIsPerfect(primsGenerator)
+    testSameSeedGeneration(primsGenerator)
+    testGeneratorsWorkOn1x1(primsGenerator)
+    testGeneratorsWorkOnNonSquareMaze(primsGenerator)
+    testGeneratedMazeIsAMazeObject(wilsonsGenerator)
+    testAllCellsVisited(wilsonsGenerator)
+    testGeneratedMazeIsConnected(wilsonsGenerator)
+    testGeneratedMazeIsPerfect(wilsonsGenerator)
+    testSameSeedGeneration(wilsonsGenerator)
+    testGeneratorsWorkOn1x1(wilsonsGenerator)
+    testGeneratorsWorkOnNonSquareMaze(wilsonsGenerator)
+
+    testMouseSolverOn1x1()
+    testMouseSolverOnCorridor()
+    testMouseSolversMaxSteps()
+    testHumanSolverOn1x1()
+    testHumanSolverOnHorizontalCorridor("LEFT")
+    testHumanSolverOnHorizontalCorridor("RIGHT")
+    testHumanSolverOnVerticalCorridor("LEFT")
+    testHumanSolverOnVerticalCorridor("RIGHT")
+    testAStarSolverOn1x1()
+    testAStarSolverOnCorridor()
+    testAStarSolverGetsTheShortestPath()
 
     print("NO ERRORS")
 
