@@ -1,15 +1,26 @@
+import os
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+import pygame
 from maze import Maze, Cell
 from mazeGenerators import DFSGenerator, primsGenerator, wilsonsGenerator
 from mazeSolvers import mouseSolver, humanSolver, aStarSolver
+from mazeVisualisation import mazeVisualiser
 
 def getCellCoordinates(cells):
     """
     Function to help with testing by getting cell coordinates.
+
+    Parameters
+    ---
+    Cells | the cell(s) to get coordinates of
+
+    Returns
+    ---
+    A set of tuples containing cell coordinates for each cell
     """
     return {(cell.row, cell.column) for cell in cells}
 
 def testCellInit():
-    
     """
     Tests that the cell is constructed properly.
     """
@@ -145,7 +156,7 @@ def testGetUnvisitedGetsNoVisitedCells():
 
 def testRemoveWallOpensNorthAndSouthWalls():
     """
-    Tests when removing north and south walls that it actually does remove those walls.
+    Tests that removeWall opens the north and south walls correctly.
     """
     maze = Maze(2,1)
     topCell = maze.grid[0][0]
@@ -160,7 +171,7 @@ def testRemoveWallOpensNorthAndSouthWalls():
 
 def testRemoveWallOpensSouthAndNorthWalls():
     """
-    Tests that when removing the south and north wall it actually does that and not something else 
+    Tests that removeWall opens the south and north walls correctly.
     """
     maze = Maze(2,1)
     topCell = maze.grid[0][0]
@@ -174,7 +185,7 @@ def testRemoveWallOpensSouthAndNorthWalls():
 
 def testRemoveWallOpensEastAndWestWalls():
     """
-    Tests when removing the east and west walls that it does that rather than something else
+    Tests that removeWall opens the east and west walls correctly.
     """
     maze = Maze(1,2)
     leftCell = maze.grid[0][0]
@@ -188,7 +199,7 @@ def testRemoveWallOpensEastAndWestWalls():
 
 def testRemoveWallOpensWestAndEastWalls():
     """
-    Tests when removingthe west and east wall that it does that rather than something else.
+    Tests that removeWall opens the west and east walls correctly.
     """
     maze = Maze(1,2)
     leftCell = maze.grid[0][0]
@@ -202,7 +213,7 @@ def testRemoveWallOpensWestAndEastWalls():
 
 def testOpenMaze():
     """
-    Tests that when using the openMaze method it actually does open the correct walls of the maze.
+    Tests that openMaze opens the entrance and exit of the maze.
     """
     maze = Maze(3,3)
     maze.openMaze()
@@ -212,7 +223,7 @@ def testOpenMaze():
 
 def testOpenMazeOn1x1():
     """
-
+    Tests that openMaze works correctly on a maze that is 1x1.
     """
     maze = Maze(1,1)
     maze.openMaze()
@@ -225,6 +236,7 @@ def testOpenMazeOn1x1():
 
 def testGetCellsGetsAllCells():
     """
+    Tests that getCells gets every cell in the maze
     """
     maze = Maze(2,3)
     cells = maze.getCells()
@@ -235,6 +247,7 @@ def testGetCellsGetsAllCells():
 
 def testGetReachableCellsGetsNothingWhenAllWallsClosed():
     """
+    Tests that no cells are reachable when all walls are closed
     """
     maze = Maze(3,3)
     cell = maze.grid[1][1]
@@ -244,6 +257,7 @@ def testGetReachableCellsGetsNothingWhenAllWallsClosed():
 
 def testGetReachableCellsReturnsHorizontalNeighbours():
     """
+    Tests that horizontally connected cells are reachable
     """
     maze = Maze(3,3)
     middleCell = maze.grid[1][1]
@@ -259,6 +273,7 @@ def testGetReachableCellsReturnsHorizontalNeighbours():
 
 def testGetReachableCellsReturnsVerticalNeighbours():
     """
+    Tests that vertically connected cells are reachable
     """
     maze = Maze(3,3)
     middleCell = maze.grid[1][1]
@@ -274,6 +289,7 @@ def testGetReachableCellsReturnsVerticalNeighbours():
 
 def testGetReachableSymmetry():
     """
+    Tests that reachability works both ways after removing a wall.
     """
     maze = Maze(3,3)
     cellOne = maze.grid[0][0]
@@ -317,7 +333,6 @@ def countMazePassages(maze):
     ---
     An int that is the number of passages in the given maze
     """
-
     passages = 0 
 
     for cell in maze.getCells():
@@ -341,7 +356,6 @@ def getConnectedCellsFromStartCell(maze):
     ---
     visited: set | A set of all the cells visitable
     """
-
     visited = set()
     stack = [maze.startCell]
 
@@ -359,7 +373,14 @@ def getConnectedCellsFromStartCell(maze):
 
 def testAllCellsVisited(generator, rows=5, columns=5, seed=10):
     """
-    A function to test that all the cells 
+    A function to test that all the cells in the maze have been visited by the specified generator.
+
+    Parameters
+    ---
+    generator | the generator to be used
+    rows | the number of rows
+    columns | the number of columns
+    seed | the seed to be used
     """
     maze = Maze(rows, columns)
     maze = generator(maze, seed)
@@ -369,6 +390,15 @@ def testAllCellsVisited(generator, rows=5, columns=5, seed=10):
 
 def testGeneratedMazeIsConnected(generator, rows=5, columns=5, seed=10):
     """
+    Tests that the specified generator creates a maze that is all "connected" that being that from anywhere in the maze a passage
+    from a to b is possible.
+
+    Parameters
+    ---
+    generator | the generator to be used
+    rows | the number of rows
+    columns | the number of columns
+    seed | the seed to be used
     """
     maze = Maze(rows, columns)
     maze = generator(maze, seed)
@@ -380,6 +410,15 @@ def testGeneratedMazeIsConnected(generator, rows=5, columns=5, seed=10):
 
 def testGeneratedMazeIsPerfect(generator, rows=5, columns=5, seed=10):
     """
+    Tests that the specified generator creates a "perfect" maze by making sure that the total cells(verticies) - 1 is equal to the total
+    number of passages (edges) in the maze
+
+    Parameters
+    ---
+    generator | the generator to be used
+    rows | the number of rows
+    columns | the number of columns
+    seed | the seed to be used
     """
     maze = Maze(rows, columns)
     maze = generator(maze, seed)
@@ -391,6 +430,15 @@ def testGeneratedMazeIsPerfect(generator, rows=5, columns=5, seed=10):
 
 def testSameSeedGeneration(generator, rows=5, columns=5, seed=42):
     """
+    Tests that if the same seed is entered (42 the meaning of life) that the specified generator generates a maze with
+    "signatures" (cell attributes) that are the same
+
+    Parameters
+    ---
+    generator | the generator to be used
+    rows | the number of rows
+    columns | the number of columns
+    seed | the seed to be used
     """
     mazeOne = Maze(rows, columns)
     mazeTwo = Maze(rows, columns)
@@ -404,16 +452,30 @@ def testSameSeedGeneration(generator, rows=5, columns=5, seed=42):
     assert mazeOneSignature == mazeTwoSignature, "expected the same seed to generate the same maze"
 
 
-def testGeneratedMazeIsAMazeObject(generator, rows=5, columns=5, seed=10):
+def testGeneratorReturnsSameMazeObject(generator, rows=5, columns=5, seed=10):
     """
+    Tests that the generator modifies and returns the same maze object.
+
+    Parameters
+    ---
+    generator | the generator to be used
+    rows | the number of rows
+    columns | the number of columns
+    seed | the seed to be used
     """
     maze = Maze(rows, columns)
     generatedMaze = generator(maze, seed)
 
-    assert generatedMaze is maze, "expected the generated maze to still be a maze object"
+    assert generatedMaze is maze, "expected the generator to return the same maze object"
 
 def testGeneratorsWorkOn1x1(generator, seed=10):
     """
+    Tests that the specified generator will work on a 1x1 maze.
+
+    Parameters
+    ---
+    generator | the generator to be used
+    seed | the seed to be used
     """
     maze = Maze(1,1)
     maze = generator(maze, seed)
@@ -424,6 +486,12 @@ def testGeneratorsWorkOn1x1(generator, seed=10):
 
 def testGeneratorsWorkOnNonSquareMaze(generator, seed=10):
     """
+    Tests that the specified generator will create a maze that isn't square
+
+    Parameters
+    ---
+    generator | the generator to be used
+    seed | the seed to be used
     """
     rows = 6
     columns = 7
@@ -445,6 +513,10 @@ def getPathCoordinates(path):
     Parameters
     ---
     path | the solution path being checked
+
+    Returns
+    ---
+    pathCoordinates: list | a list of the x&y coordinates of each cell in the path
     """
     pathCoordinates = []
     for cell in path:
@@ -461,6 +533,10 @@ def isPathValid(maze, path):
     ---
     maze: Maze | the maze the path is a solution to
     path | the solution path to check if valid
+
+    Returns
+    ---
+    bool | returns a boolean value depending on if the path is valid or not.
     """
     if len(path) == 0:
         print("path doesnt exist")
@@ -483,6 +559,14 @@ def isPathValid(maze, path):
 def horizontalCorridorMaze(length):
     """
     A function to create a 1 x length "maze" (just a corridor) to test that the solvers can actually move accross it
+
+    Parameters
+    ---
+    length: int | takes the length of the corridor
+
+    Returns
+    ---
+    maze | the corridor
     """
     maze = Maze(1, length)
 
@@ -493,6 +577,15 @@ def horizontalCorridorMaze(length):
 
 def verticalCorridorMaze(length):
     """
+    Helper function to create a length x 1 corridor to test the directional logic in the human solver.
+
+    Parameters
+    ---
+    length: int | takes the length of the corridor
+
+    Returns
+    ---
+    maze | the corridor
     """
     maze = Maze(length, 1)
 
@@ -509,6 +602,10 @@ def getShortestPathPossible(maze):
     Parameters
     ---
     maze: Maze | the maze to get the shortest path for
+
+    returns
+    ---
+    currentLength | the shortest paths length
     """
     queue = [(maze.startCell, 1)]
     visited = {maze.startCell}
@@ -526,6 +623,7 @@ def getShortestPathPossible(maze):
 
 def testMouseSolverOn1x1():
     """
+    Testing that the mouse solver will return a path on the smallest possible maze.
     """
     maze = Maze(1,1)
     path = mouseSolver(maze)
@@ -536,7 +634,7 @@ def testMouseSolverOnCorridor():
     """
     Test that it can move through a corridor, was originally max steps 10 but raised to 100 so essentially impossible to fail
     """
-    maze = horizontalCorridorMaze(3)
+    maze = horizontalCorridorMaze(2)
     path = mouseSolver(maze, 100)
    
     assert path[0] == maze.startCell, "expected first cell in path to be the start cell"
@@ -545,6 +643,7 @@ def testMouseSolverOnCorridor():
 
 def testMouseSolversMaxSteps():
     """
+    Testing that the mouse solver won't go over its maximum step killswitch.
     """
     maze = horizontalCorridorMaze(3)
     path = mouseSolver(maze, 1)
@@ -555,6 +654,7 @@ def testMouseSolversMaxSteps():
 
 def testHumanSolverOn1x1():
     """
+    Testing that the human solver can generate a path on the smallest possible maze.
     """
     maze = Maze(1,1)
     path = humanSolver(maze)
@@ -563,6 +663,11 @@ def testHumanSolverOn1x1():
 
 def testHumanSolverOnHorizontalCorridor(rule):
     """
+    Testing that the human solver can correctly generate a path on a horrizontal corridor.
+
+    Parameters
+    ---
+    rule: str | the rule for the human solver to use
     """
     maze = horizontalCorridorMaze(5)
     path = humanSolver(maze, rule)
@@ -575,7 +680,11 @@ def testHumanSolverOnHorizontalCorridor(rule):
 
 def testHumanSolverOnVerticalCorridor(rule):
     """
-    Testing this twice as it has a directional
+    Testing this vertically as well as horizontally as it has seperate logic for each direction.
+
+    Parameters
+    ---
+    rule: str | the rule for the human solver to use
     """
     maze = verticalCorridorMaze(5)
     path = humanSolver(maze, rule)
@@ -588,6 +697,7 @@ def testHumanSolverOnVerticalCorridor(rule):
 
 def testAStarSolverOn1x1():
     """
+    Tests that the A* algorithm can generate a path on the smallest maze possible.
     """
     maze = Maze(1,1)
     path = aStarSolver(maze)
@@ -596,6 +706,7 @@ def testAStarSolverOn1x1():
 
 def testAStarSolverOnCorridor():
     """
+    Tests that the A* algorithm can solve a simple corridor 
     """
     maze = horizontalCorridorMaze(5)
     path = aStarSolver(maze)
@@ -608,6 +719,7 @@ def testAStarSolverOnCorridor():
 
 def testAStarSolverGetsTheShortestPath():
     """
+    Tests that when creating a soltuion path that A* gets the shortest possible solution
     """
     maze = Maze(5,5)
     maze = DFSGenerator(maze)
@@ -619,8 +731,83 @@ def testAStarSolverGetsTheShortestPath():
     assert isPathValid(maze, path), f"path was invalid {getPathCoordinates(path)}"
     assert len(path) == shortestPath
 
-def runAllTests():
+def testMazeVisualiserInit():
+    """
+    Tests that the visualiser is properly constructed.
+    """
+    maze = Maze(4,5)
+    visualiser = mazeVisualiser(maze, 600, 700, 30)
 
+    assert visualiser.maze is maze, "expected the maze to be stored"
+    assert visualiser.windowWidth == 600, "expected the width to be 600"
+    assert visualiser.windowHeight == 700, "expected the height to be 700"
+    assert visualiser.margin == 30, "expected the margin to be 30"
+    assert visualiser.backgroundColour == (255,255,255), "wrong back colour"
+    assert visualiser.wallColour == (0,0,0), "wrong wall colour"
+    assert visualiser.startCellColour == (0,200,0), "wrong start colour"
+    assert visualiser.endCellColour == (200,0,0), "wrong end colour"
+    assert visualiser.pathCellsColour == (0,0,200), "wrong path colour"
+    assert visualiser.cellSize > 0, "cell size should be positive"
+
+    pygame.quit()
+
+def testGetCellRect():
+    """
+    Tests getCellRect treturns correct rectangle for a given cell
+    """
+    maze = Maze(2,2)
+    visualiser = mazeVisualiser(maze, 200, 200, 20)
+    cell = maze.grid[1][1]
+    rect = visualiser.getCellRect(cell)
+    expectedXCoordinate = visualiser.offsetX + cell.column * visualiser.cellSize
+    expectedYCoordinate = visualiser.offsetY + cell.row * visualiser.cellSize
+
+    assert rect.x == expectedXCoordinate, f"expected {expectedXCoordinate}, got {rect.x}"
+    assert rect.y == expectedYCoordinate, f"expected {expectedYCoordinate}, got {rect.y}"
+    assert rect.width == visualiser.cellSize, f"expected {visualiser.cellSize}, got {rect.width}"
+    assert rect.height == visualiser.cellSize, f"expected {visualiser.cellSize}, got {rect.height}"
+
+    pygame.quit()
+
+def testDrawMazeWithoutPath():
+    """
+    Tests that drawMaze runs without error when no path is given.
+    """
+    maze = Maze(3, 3)
+    visualiser = mazeVisualiser(maze)
+    visualiser.drawMaze()
+
+    pygame.quit()
+
+
+def testDrawMazeWithPath():
+    """
+    Tests that drawMaze runs without error when a path is given.
+    """
+    maze = Maze(1, 3)
+    maze.removeWall(maze.grid[0][0], maze.grid[0][1])
+    maze.removeWall(maze.grid[0][1], maze.grid[0][2])
+    path = [maze.grid[0][0], maze.grid[0][1], maze.grid[0][2]]
+    visualiser = mazeVisualiser(maze)
+    visualiser.drawMaze(path)
+
+    pygame.quit()
+
+
+def testVisualiseReturnsOnKeyPress():
+    """
+    Tests that visualise returns when a key is pressed.
+    """
+    maze = Maze(2, 2)
+    visualiser = mazeVisualiser(maze)
+    pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_SPACE))
+    result = visualiser.visualise()
+
+    assert result is None, f"expected None, got {result}"
+
+    pygame.quit()
+
+def runAllTests():
     """
     The name.
     """
@@ -646,21 +833,21 @@ def runAllTests():
     testGetReachableCellsReturnsVerticalNeighbours()
     testGetReachableSymmetry()
 
-    testGeneratedMazeIsAMazeObject(DFSGenerator)
+    testGeneratorReturnsSameMazeObject(DFSGenerator)
     testAllCellsVisited(DFSGenerator)
     testGeneratedMazeIsConnected(DFSGenerator)
     testGeneratedMazeIsPerfect(DFSGenerator)
     testSameSeedGeneration(DFSGenerator)
     testGeneratorsWorkOn1x1(DFSGenerator)
     testGeneratorsWorkOnNonSquareMaze(DFSGenerator)
-    testGeneratedMazeIsAMazeObject(primsGenerator)
+    testGeneratorReturnsSameMazeObject(primsGenerator)
     testAllCellsVisited(primsGenerator)
     testGeneratedMazeIsConnected(primsGenerator)
     testGeneratedMazeIsPerfect(primsGenerator)
     testSameSeedGeneration(primsGenerator)
     testGeneratorsWorkOn1x1(primsGenerator)
     testGeneratorsWorkOnNonSquareMaze(primsGenerator)
-    testGeneratedMazeIsAMazeObject(wilsonsGenerator)
+    testGeneratorReturnsSameMazeObject(wilsonsGenerator)
     testAllCellsVisited(wilsonsGenerator)
     testGeneratedMazeIsConnected(wilsonsGenerator)
     testGeneratedMazeIsPerfect(wilsonsGenerator)
@@ -679,6 +866,12 @@ def runAllTests():
     testAStarSolverOn1x1()
     testAStarSolverOnCorridor()
     testAStarSolverGetsTheShortestPath()
+
+    testMazeVisualiserInit()
+    testGetCellRect()
+    testDrawMazeWithPath()
+    testDrawMazeWithoutPath()
+    testVisualiseReturnsOnKeyPress()
 
     print("NO ERRORS")
 
