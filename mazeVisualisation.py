@@ -51,7 +51,9 @@ class mazeVisualiser:
         self.pathCellsColour = (0,0,200)
         self.font = pygame.font.SysFont(None, 30)
 
-        self.cellSize = min((self.windowWidth - self.margin) // self.maze.columns, (self.windowHeight - self.margin) // self.maze.rows)
+        self.cellSize = min((self.windowWidth - 2 * self.margin) // self.maze.columns, (self.windowHeight - 2 * self.margin) // self.maze.rows)
+        if self.cellSize <= 0:
+            raise ValueError("Window is too small for this maze and margin.")
         self.offsetX = (self.windowWidth - self.maze.columns * self.cellSize) // 2
         self.offsetY = (self.windowHeight - self.maze.rows * self.cellSize) // 2
 
