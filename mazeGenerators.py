@@ -19,6 +19,7 @@ def DFSGenerator(maze: Maze, seed = None):
     ---
     maze | The generated maze.
     """
+    maze.openMaze()
     rng = rnd.Random(seed)
     currentCell = maze.startCell
     currentCell.visited = True
@@ -61,6 +62,7 @@ def primsGenerator(maze: Maze, seed = None):
     ---
     maze | The generated maze.
     """
+    maze.openMaze()
     rng = rnd.Random(seed)
     startCell = maze.grid[rng.randint(0, maze.rows-1)][rng.randint(0, maze.columns-1)]
     startCell.visited = True
@@ -107,6 +109,7 @@ def wilsonsGenerator(maze: Maze, seed = None):
     ---
     maze | The generated maze.
     """
+    maze.openMaze()
     rng = rnd.Random(seed)
     allCells = maze.getCells()
     randomCell = allCells[rng.randint(0, len(allCells)-1)]
@@ -115,27 +118,27 @@ def wilsonsGenerator(maze: Maze, seed = None):
 
     while len(allCells) > 0:
         currentCell = allCells[rng.randint(0, len(allCells)-1)]
-        walkpath = [currentCell]
+        walkPath = [currentCell]
 
         while currentCell.visited == False:
             currentCellNeighbours = maze.getNeighbours(currentCell)
             randomNeighbour = currentCellNeighbours[rng.randint(0, len(currentCellNeighbours)-1)]
             
-            if randomNeighbour in walkpath:
-                loopStart = walkpath.index(randomNeighbour)
-                walkpath = walkpath[:loopStart + 1] 
-                currentCell = walkpath[-1]
+            if randomNeighbour in walkPath:
+                loopStart = walkPath.index(randomNeighbour)
+                walkPath = walkPath[:loopStart + 1] 
+                currentCell = walkPath[-1]
             elif randomNeighbour.visited == True:
-                walkpath.append(randomNeighbour)
+                walkPath.append(randomNeighbour)
                 break
             else:
-                walkpath.append(randomNeighbour)
+                walkPath.append(randomNeighbour)
                 currentCell = randomNeighbour
         
-        for i in range(len(walkpath)-1):
-            maze.removeWall(walkpath[i], walkpath[i+1])
+        for i in range(len(walkPath)-1):
+            maze.removeWall(walkPath[i], walkPath[i+1])
 
-        for cell in walkpath:
+        for cell in walkPath:
             if cell.visited == False:
                 cell.visited = True
                 allCells.remove(cell)
