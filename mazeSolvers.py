@@ -22,7 +22,6 @@ def mouseSolver(maze: Maze, maxSteps: int = 10000):
     endCell = maze.endCell
     path = [currentCell]
     steps = 0
-    
 
     while currentCell != endCell and steps < maxSteps:
         neighbours = maze.getReachableCells(currentCell)
@@ -55,8 +54,13 @@ def humanSolver(maze: Maze, rule = "L"):
     facing = "S"
     directions = []
 
+    rule = rule.upper()
+
+    if rule not in ["L", "LEFT", "R", "RIGHT"]:
+        raise ValueError("Rule must be 'L', 'LEFT', 'R', or 'RIGHT'.")
+
     while currentCell != endCell:
-        if rule.upper() == "L" or rule.upper() == "LEFT":
+        if rule == "L" or rule == "LEFT":
             if facing == "N":
                 directions = ["W", "N", "E", "S"]
             elif facing == "S":
@@ -66,7 +70,7 @@ def humanSolver(maze: Maze, rule = "L"):
             elif facing == "W":
                 directions = ["S", "W", "N", "E"]
 
-        elif rule.upper() == "R" or rule.upper() == "RIGHT":
+        elif rule == "R" or rule == "RIGHT":
             if facing == "N":
                 directions = ["E", "N", "W", "S"]
             elif facing == "S":
@@ -156,12 +160,12 @@ def aStarSolver(maze: Maze):
             if cell in closedSet:
                 continue
 
-            tentativeG = gScore[currentCell] + 1
+            tempG = gScore[currentCell] + 1
 
-            if cell not in gScore or tentativeG < gScore[cell]:
+            if cell not in gScore or tempG < gScore[cell]:
                 cameFrom[cell] = currentCell
-                gScore[cell] = tentativeG
-                fScore[cell] = tentativeG + abs(endCell.row - cell.row) + abs(endCell.column - cell.column)
+                gScore[cell] = tempG
+                fScore[cell] = tempG + abs(endCell.row - cell.row) + abs(endCell.column - cell.column)
 
                 if cell not in openSet:
                     openSet.append(cell)
