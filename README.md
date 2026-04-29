@@ -29,15 +29,6 @@ Now we generate the maze using the DFS-based generator, also to have the ability
 
 The generator will modify the maze by removing walls between cells, now the maze becomes fully connected (there now exists a route through the maze), then the function returns the generated maze. 
 
-Before we can solve or visualise the maze, we "open" the maze so there is an entrance and exit:
-
-```python
->>> maze.openMaze()
-
-```
-
-The start cell's north wall is removed (entrance) and the end cell's south wall is removed (exit).
-
 Now we're in a position to solve the maze using the A* Solver:
 
 ```python
@@ -103,7 +94,7 @@ Use this when you want a standard maze quickly.
 
 1. Create a maze with your chosen size.
 2. Run DFSGenerator.
-3. Open the entrance and exit. 
+
 
 ```python 
 >>> from maze import Maze
@@ -112,7 +103,6 @@ Use this when you want a standard maze quickly.
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
->>> maze.openMaze()
 
 ```
 
@@ -135,8 +125,6 @@ Swap the generator function you call.
 >>> maze = primsGenerator(maze)
 >>> # maze = wilsonsGenerator(maze)
 
->>> maze.openMaze()
-
 ```
 
 You will get a maze of the same size but with a different structure.
@@ -156,7 +144,6 @@ Use this when you want an efficient path from start to end.
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
->>> maze.openMaze()
 
 >>> path = aStarSolver(maze)
 >>> len(path) > 0
@@ -187,7 +174,6 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
->>> maze.openMaze()
 
 >>> left_path = humanSolver(maze, rule="L")
 >>> right_path = humanSolver(maze, rule="R")
@@ -218,7 +204,6 @@ Use this when you want a path that behaves like random wandering.
 
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
->>> maze.openMaze()
 
 >>> mouse_path = mouseSolver(maze, maxSteps=10000)
 >>> len(mouse_path) > 0
