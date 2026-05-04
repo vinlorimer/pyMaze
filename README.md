@@ -401,7 +401,7 @@ The following solving functions are provided in mazeSolvers:
 - `humanSolver`
 - `mouseSolver`
 
-The following class  is provided in mazeVisualiser:
+The following visualisation class is provided:
 - `mazeVisualiser`
 
 The following are used in Maze internally by generators and solvers:
@@ -416,14 +416,12 @@ The following are used in Maze internally by generators and solvers:
 ### Testing the software
 To test the code:
 
-```python
-$ python pyMazeTests.py
+```bash
+python pyMazeTests.py
 ```
 
-To test the documentation:
-
-```python
-$ python -m doctest README.md
+```bash
+python -m doctest README.md
 ```
 
 ### Bibliography.
