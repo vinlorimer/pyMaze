@@ -52,8 +52,8 @@ A positive integer will be printed (larger mazes typically print longer paths).
 We can compare solvers by also solving the maze using the left-hand rule:
 
 ```python
->>> from mazeSolvers import humanSolver
->>> human_path = humanSolver(maze, rule="L")
+>>> from pyMaze import humanSolver
+>>> human_path = pyMaze.humanSolver(maze, rule="L")
 >>> len(human_path) >0
 True
 
@@ -65,9 +65,8 @@ The left hand rule will usually produce a valid route, but it may be longer than
 Finally, we can visualise the generated maze. This will open a Pygame window and draw the maze walls:
 
 ```python
-from mazeVisualisation import mazeVisualiser
-vis = mazeVisualiser(maze)
-vis
+from pyMaze import mazeVisualiser
+vis = pyMaze.mazeVisualiser(maze)
 
 ```
 
@@ -75,7 +74,6 @@ A visualiser object is created and is ready to draw the maze.
 
 From here we can display the maze, the solution path and the path length.
 
-  
 ```python
 vis.visualise(path)
 
@@ -93,10 +91,7 @@ Use this when you want a standard maze quickly.
 
 
 ```python 
->>> from maze import Maze
-
->>> from mazeGenerators import DFSGenerator
-
+>>> from pyMaze import Maze, DFSGenerator
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
 
@@ -112,14 +107,13 @@ Use this when you want a different "style" of maze without changing anything els
 Swap the generator function you call.
 
 ```python
->>> from maze import Maze
->>> from mazeGenerators import primsGenerator, wilsonsGenerator
+>>> from pyMaze import Maze, primsGenerator, wilsonsGenerator
 
->>> maze = Maze(rows=20, columns=20)
+>>> maze = pyMaze.Maze(rows=20, columns=20)
 
 >>> # Choose ONE:
->>> maze = primsGenerator(maze)
->>> # maze = wilsonsGenerator(maze)
+>>> maze = pyMaze.primsGenerator(maze)
+>>> # maze = pyMaze.wilsonsGenerator(maze)
 
 ```
 
@@ -134,14 +128,12 @@ Use this when you want an efficient path from start to end.
 2. Solve the maze using `aStarSolver`.
 
 ```python
->>> from maze import Maze
->>> from mazeGenerators import DFSGenerator
->>> from mazeSolvers import aStarSolver
+>>> from pyMaze import Maze, DFSGenerator, aStarSolver
 
->>> maze = Maze(rows=20, columns=20)
->>> maze = DFSGenerator(maze)
+>>> maze = pyMaze.Maze(rows=20, columns=20)
+>>> maze = pyMaze.DFSGenerator(maze)
 
->>> path = aStarSolver(maze)
+>>> path = pyMaze.aStarSolver(maze)
 >>> len(path) > 0
 True
 
@@ -164,15 +156,13 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 2. Call `humanSolver` with a rule (left hand or right hand).
 
 ```python
->>> from maze import Maze
->>> from mazeGenerators import DFSGenerator
->>> from mazeSolvers import humanSolver
+>>> from pyMaze import Maze, DFSGenerator, humanSolver
 
->>> maze = Maze(rows=20, columns=20)
->>> maze = DFSGenerator(maze)
+>>> maze = pymaze.Maze(rows=20, columns=20)
+>>> maze = pymaze.DFSGenerator(maze)
 
->>> left_path = humanSolver(maze, rule="L")
->>> right_path = humanSolver(maze, rule="R")
+>>> left_path = pymaze.humanSolver(maze, rule="L")
+>>> right_path = pymaze.humanSolver(maze, rule="R")
 >>> len(left_path) > 0
 True
 >>> len(right_path) > 0
@@ -194,14 +184,12 @@ Use this when you want a path that behaves like random wandering.
 3. Use `maxSteps` to prevent infinite wandering.
 
 ```python
->>> from maze import Maze
->>> from mazeGenerators import DFSGenerator
->>> from mazeSolvers import mouseSolver
+>>> from pyMaze import Maze, DFSGenerator, mouseSolver
 
->>> maze = Maze(rows=20, columns=20)
->>> maze = DFSGenerator(maze)
+>>> maze = pyMaze.Maze(rows=20, columns=20)
+>>> maze = pyMaze.DFSGenerator(maze)
 
->>> mouse_path = mouseSolver(maze, maxSteps=10000)
+>>> mouse_path = pyMaze.mouseSolver(maze, maxSteps=10000)
 >>> len(mouse_path) > 0
 True
 
@@ -220,8 +208,8 @@ Use this when you want to view the maze layout in a window.
 2. Call `mazeVisualiser(maze)`.
 
 ```python
-from mazeVisualisation import mazeVisualiser
-vis = mazeVisualiser(maze)
+from pyMaze import mazeVisualiser
+vis = pyMaze.mazeVisualiser(maze)
 vis.visualise()
 
 ```
@@ -233,8 +221,8 @@ A widow opens showing maze walls, start cell (green), and end cell (red), but no
 When you want to show the route produced by a solver use the following.
 
 ```python
-from mazeVisualisation import mazeVisualiser
-vis = mazeVisualiser(maze)
+from pyMaze import mazeVisualiser
+vis = pyMaze.mazeVisualiser(maze)
 vis.visualise(path)
 
 ```
@@ -249,11 +237,11 @@ Use this when you want to compare "efficiency" of different solvers using a simp
 3. Compare `len(path)`.
 
 ```python
->>> from mazeSolvers import aStarSolver, humanSolver, mouseSolver
+>>> from pyMaze import aStarSolver, humanSolver, mouseSolver
 
->>> a_star_path = aStarSolver(maze)
->>> left_hand_path = humanSolver(maze, rule="L")
->>> mouse_path = mouseSolver(maze, maxSteps=10000)
+>>> a_star_path = pyMaze.aStarSolver(maze)
+>>> left_hand_path = pyMaze.humanSolver(maze, rule="L")
+>>> mouse_path = pyMaze.mouseSolver(maze, maxSteps=10000)
 
 >>> len(a_star_path) > 0
 True
