@@ -6,8 +6,10 @@ In this tutorial we will see how to use pyMaze to generate and solve a maze.
 We start by importing Maze from pyMaze and creating a 20x20 maze. 
 
 ```python
+>>> import os
+>>> os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 >>> from pyMaze import Maze
->>> maze = pyMaze.Maze(20, 20)
+>>> maze = Maze(20, 20)
 >>> (maze.rows, maze.columns)
 (20, 20)
 
@@ -19,7 +21,7 @@ Now we generate the maze using the DFS-based generator, we can also add a seed s
 
 ```python
 >>> from pyMaze import DFSGenerator
->>> maze = pyMaze.DFSGenerator(maze, seed=5)
+>>> maze = DFSGenerator(maze, seed=5)
 
 ```
 
@@ -29,7 +31,7 @@ Now we're in a position to solve the maze using the A* Solver:
 
 ```python
 >>> from pyMaze import aStarSolver
->>> path = pyMaze.aStarSolver(maze)
+>>> path = aStarSolver(maze)
 >>> (len(path) > 0)
 True
 
@@ -53,7 +55,7 @@ We can compare solvers by also solving the maze using the left-hand rule:
 
 ```python
 >>> from pyMaze import humanSolver
->>> human_path = pyMaze.humanSolver(maze, rule="L")
+>>> human_path = humanSolver(maze, rule="L")
 >>> len(human_path) >0
 True
 
@@ -66,7 +68,7 @@ Finally, we can visualise the generated maze. This will open a Pygame window and
 
 ```python
 from pyMaze import mazeVisualiser
-vis = pyMaze.mazeVisualiser(maze)
+vis = mazeVisualiser(maze)
 
 ```
 
@@ -109,11 +111,11 @@ Swap the generator function you call.
 ```python
 >>> from pyMaze import Maze, primsGenerator, wilsonsGenerator
 
->>> maze = pyMaze.Maze(rows=20, columns=20)
+>>> maze = Maze(rows=20, columns=20)
 
 >>> # Choose ONE:
->>> maze = pyMaze.primsGenerator(maze)
->>> # maze = pyMaze.wilsonsGenerator(maze)
+>>> maze = primsGenerator(maze)
+>>> # maze = wilsonsGenerator(maze)
 
 ```
 
@@ -130,10 +132,10 @@ Use this when you want an efficient path from start to end.
 ```python
 >>> from pyMaze import Maze, DFSGenerator, aStarSolver
 
->>> maze = pyMaze.Maze(rows=20, columns=20)
->>> maze = pyMaze.DFSGenerator(maze)
+>>> maze = Maze(rows=20, columns=20)
+>>> maze = DFSGenerator(maze)
 
->>> path = pyMaze.aStarSolver(maze)
+>>> path = aStarSolver(maze)
 >>> len(path) > 0
 True
 
@@ -158,11 +160,11 @@ Use this when you want a 'human-style" route that may not be the shortest path.
 ```python
 >>> from pyMaze import Maze, DFSGenerator, humanSolver
 
->>> maze = pymaze.Maze(rows=20, columns=20)
->>> maze = pymaze.DFSGenerator(maze)
+>>> maze = Maze(rows=20, columns=20)
+>>> maze = DFSGenerator(maze)
 
->>> left_path = pymaze.humanSolver(maze, rule="L")
->>> right_path = pymaze.humanSolver(maze, rule="R")
+>>> left_path = humanSolver(maze, rule="L")
+>>> right_path = humanSolver(maze, rule="R")
 >>> len(left_path) > 0
 True
 >>> len(right_path) > 0
@@ -186,8 +188,8 @@ Use this when you want a path that behaves like random wandering.
 ```python
 >>> from pyMaze import Maze, DFSGenerator, mouseSolver
 
->>> maze = pyMaze.Maze(rows=20, columns=20)
->>> maze = pyMaze.DFSGenerator(maze)
+>>> maze = Maze(rows=20, columns=20)
+>>> maze = DFSGenerator(maze)
 
 >>> mouse_path = pyMaze.mouseSolver(maze, maxSteps=10000)
 >>> len(mouse_path) > 0
@@ -209,7 +211,7 @@ Use this when you want to view the maze layout in a window.
 
 ```python
 from pyMaze import mazeVisualiser
-vis = pyMaze.mazeVisualiser(maze)
+vis = mazeVisualiser(maze)
 vis.visualise()
 
 ```
@@ -222,7 +224,7 @@ When you want to show the route produced by a solver use the following.
 
 ```python
 from pyMaze import mazeVisualiser
-vis = pyMaze.mazeVisualiser(maze)
+vis = mazeVisualiser(maze)
 vis.visualise(path)
 
 ```
@@ -239,9 +241,9 @@ Use this when you want to compare "efficiency" of different solvers using a simp
 ```python
 >>> from pyMaze import aStarSolver, humanSolver, mouseSolver
 
->>> a_star_path = pyMaze.aStarSolver(maze)
->>> left_hand_path = pyMaze.humanSolver(maze, rule="L")
->>> mouse_path = pyMaze.mouseSolver(maze, maxSteps=10000)
+>>> a_star_path = aStarSolver(maze)
+>>> left_hand_path = humanSolver(maze, rule="L")
+>>> mouse_path = mouseSolver(maze, maxSteps=10000)
 
 >>> len(a_star_path) > 0
 True
