@@ -1,39 +1,35 @@
 # pyMaze
-A library to generate, solve and visualise pyMazes. 
+A library to generate, solve and visualise Mazes. 
 ## Tutorial
-In this tutorial we will see how to use pyMaze to generate and solve a maze. The goal is to create a maze, generate its walls using a standard maze algorithm, solve it using a maze solver, and then visualise the maze using Pygame. 
+In this tutorial we will see how to use pyMaze to generate and solve a maze.
 
 We start by importing Maze from maze and creating a 20x20 maze. 
 
 ```python
->>> from maze import Maze
->>> maze = Maze(20, 20)
+>>> from pyMaze import Maze
+>>> maze = pyMaze.Maze(20, 20)
 >>> (maze.rows, maze.columns)
 (20, 20)
 
 ```
 
-
 From this a `Maze` object is created containing a 20x20 grid of cell objects. The start cell is the top-left cell (`maze.startCell`) and the end cell is the bottom-right cell (`maze.endCell`).
 
-Now we generate the maze using the DFS-based generator, also to have the ability to repeat using the same maze we use random:
+Now we generate the maze using the DFS-based generator, we can also add a seed so that the generated maze is repeatable.
 
 ```python
-
->>> import random as rnd
->>> rnd.seed(0)
->>> from mazeGenerators import DFSGenerator
->>> maze = DFSGenerator(maze)
+>>> from pyMaze import DFSGenerator
+>>> maze = pyMaze.DFSGenerator(maze, seed=5)
 
 ```
 
-The generator will modify the maze by removing walls between cells, now the maze becomes fully connected (there now exists a route through the maze), then the function returns the generated maze. 
+The generator will modify the maze by removing walls between cells, causing the maze to become fully connected, then the function returns the generated maze. 
 
 Now we're in a position to solve the maze using the A* Solver:
 
 ```python
->>> from mazeSolvers import aStarSolver
->>> path = aStarSolver(maze)
+>>> from pyMaze import aStarSolver
+>>> path = pyMaze.aStarSolver(maze)
 >>> (len(path) > 0)
 True
 
