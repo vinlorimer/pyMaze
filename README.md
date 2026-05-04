@@ -191,7 +191,7 @@ Use this when you want a path that behaves like random wandering.
 >>> maze = Maze(rows=20, columns=20)
 >>> maze = DFSGenerator(maze)
 
->>> mouse_path = pyMaze.mouseSolver(maze, maxSteps=10000)
+>>> mouse_path = mouseSolver(maze, maxSteps=10000)
 >>> len(mouse_path) > 0
 True
 
@@ -350,6 +350,7 @@ Human wall-following solvers simulate a local rule: always keep one hand on a wa
 This produces a path that can be very different from the shortest path because it is based on local choices rather than global optimality.
 
 From a modelling viewpoint, wall following is useful because it mimics a realistic strategy a person might use without knowing the full map.
+
 
 #### Mouse solver (random exploration).
 The mouse solver simulates a very simple way of navigating a maze:
