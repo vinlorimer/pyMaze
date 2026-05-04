@@ -3,7 +3,7 @@ A library to generate, solve and visualise Mazes.
 ## Tutorial
 In this tutorial we will see how to use pyMaze to generate and solve a maze.
 
-We start by importing Maze from maze and creating a 20x20 maze. 
+We start by importing Maze from pyMaze and creating a 20x20 maze. 
 
 ```python
 >>> from pyMaze import Maze
@@ -57,7 +57,7 @@ We can compare solvers by also solving the maze using the left-hand rule:
 >>> len(human_path) >0
 True
 
-print(len(path))
+print(len(human_path))
 ```
 
 The left hand rule will usually produce a valid route, but it may be longer than the A* route. 
@@ -214,7 +214,7 @@ vis.visualise()
 
 ```
 
-A widow opens showing maze walls, start cell (green), and end cell (red), but no path is drawn.
+A window opens showing maze walls, start cell (green), and end cell (red), but no path is drawn.
 
 ### How to visualise a maze with a solved path.
 
@@ -299,7 +299,7 @@ pyMaze uses two useful ideas:
 - Neighbours: cells next to you in the grid (up/ down/ right/ left), regardless of walls.
 - Reachable cells: Neighbours that you can actually move to because there is no wall blocking the way. 
 
-This is useful beacuse generators will often check neighbours to decide where to carve and solvers must use reachable cells so they don't "walk through walls".
+This is useful because generators will often check neighbours to decide where to carve and solvers must use reachable cells so they don't "walk through walls".
 
 ### Maze generation. 
 Maze generation starts with all walls present, then the algorithm adds edges by removing walls between neighbouring cells to build a connected maze. Each time we remove a wall between 2 adjacent cells we add an edge.
@@ -313,7 +313,7 @@ The DFS- style generator explores "as far as possible" before backtracking:
 2. Randomly choose an unvisited neighbour, carve a passage to it, and move there.
 3. If no unvisited neighbours exist, back track to the most recent cell that still has unvisited neighbours.
 
-In return this tends to create longer corrdiors and many dead ends. This is beacuse DFS commits deeply and backtracking leaves behind terminal branches. 
+In return this tends to create longer corridors and many dead ends. This is beacuse DFS commits deeply and backtracking leaves behind terminal branches. 
 
 #### Prim-style generation (frontier growth)
 A Prim-style generator grows the maze outward from a visited region:
@@ -338,7 +338,7 @@ Once a maze is generated, solving it means finding a path from $s$ to $t$. If ev
 #### A* solving and why it is efficient. 
 A* is a goal-directed search method that balances:
 - The cost so far (steps from start to current cell)
-- An estimate of how far remains (a heurustic distance to the goal).
+- An estimate of how far remains (a heuristic distance to the goal).
 
 This helps A* "aim" toward the exit rather than exploring blindly, so it typically explores fewer cells than a purely uniformed method, while still finding a valid route when one exists. 
 
@@ -391,14 +391,14 @@ The following classes are provided in pyMaze:
 The following generation functions are provided in mazeGenerators:
 - `DFSGenerator`
 - `primsGenerator`
-- `wilsonsGen erator`
+- `wilsonsGenerator`
 
 The following solving functions are provided in mazeSolvers:
 - `aStarSolver`
 - `humanSolver`
 - `mouseSolver`
 
-The following visualisation function is provided in mazeVisualiser:
+The following class  is provided in mazeVisualiser:
 - `mazeVisualiser`
 
 The following are used in Maze internally by generators and solvers:
@@ -407,14 +407,14 @@ The following are used in Maze internally by generators and solvers:
 - `getUnvisited`
 - `removeWall`
 - `openMaze`
-- `getcells`
+- `getCells`
 - `getReachableCells`
 
 ### Testing the software
 To test the code:
 
 ```python
-$ python testpyMaze.py
+$ python pyMazeTests.py
 ```
 
 To test the documentation:
